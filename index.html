@@ -1,0 +1,2928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>RenovateIQ Pro — Home Renovation Estimator</title>
+
+<!-- PWA Meta Tags -->
+<meta name="description" content="Professional home renovation cost estimator — itemized, location-adjusted, contractor-ready."/>
+<meta name="theme-color" content="#f59e0b"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="RenovateIQ"/>
+<meta name="application-name" content="RenovateIQ Pro"/>
+<meta name="msapplication-TileColor" content="#020617"/>
+
+<!-- PWA Manifest (inline as data URI so it works as single file) -->
+<link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22RenovateIQ%20Pro%22%2C%22short_name%22%3A%22RenovateIQ%22%2C%22description%22%3A%22Professional%20home%20renovation%20estimator%22%2C%22start_url%22%3A%22%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23020617%22%2C%22theme_color%22%3A%22%23f59e0b%22%2C%22orientation%22%3A%22portrait-primary%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%3D%2527http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%2527%2520viewBox%3D%270%25200%252080%252080%2527%253E%253Crect%2520width%3D%252780%2527%2520height%3D%252780%2527%2520rx%3D%252718%2527%2520fill%3D%2527%2523f59e0b%2527%2F%253E%253Ctext%2520x%3D%252740%2527%2520y%3D%252754%2527%2520font-size%3D%252742%2527%2520text-anchor%3D%2527middle%2527%253E%25F0%259F%2598%25A4%253C%2Ftext%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22any%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D"/>
+
+<!-- Apple Touch Icon (inline SVG as data URI) -->
+<link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'><rect width='180' height='180' rx='40' fill='%23f59e0b'/><text x='90' y='125' font-size='100' text-anchor='middle'>🏗️</text></svg>"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet"/>
+<style>
+/* ── BRAND COLORS (always same) ── */
+:root{
+  --amber:#f59e0b;--orange:#f97316;--green:#22c55e;--red:#ef4444;--blue:#3b82f6;
+  --violet:#8b5cf6;--cyan:#06b6d4;--pink:#ec4899;
+}
+
+/* ── LIGHT MODE (default) ── */
+:root, [data-theme="light"]{
+  --bg:#f4f5f7;
+  --surface:#ffffff;
+  --card:#ffffff;
+  --card2:#f8f9fb;
+  --border:#e2e5ea;
+  --border2:#d0d5dd;
+  --text:#111827;
+  --muted:#374151;
+  --dim:#6b7280;
+  --faint:#9ca3af;
+  --header-bg:rgba(255,255,255,0.95);
+  --header-border:#e2e5ea;
+  --stepper-bg:#ffffff;
+  --card-active-bg:rgba(245,158,11,0.05);
+  --room-hdr-bg:#f8f9fb;
+  --room-hdr-open:rgba(245,158,11,0.08);
+  --size-strip-bg:rgba(245,158,11,0.05);
+  --shadow:0 1px 4px rgba(0,0,0,0.08);
+  --shadow-md:0 4px 16px rgba(0,0,0,0.10);
+  --input-bg:#f8f9fb;
+  --btn-ghost-bg:#ffffff;
+  --pwa-bg:rgba(255,255,255,0.97);
+  --est-cover-bg:linear-gradient(135deg,#1a1a2e 0%,#16213e 100%);
+}
+
+/* ── DARK MODE ── */
+[data-theme="dark"]{
+  --bg:#020617;
+  --surface:#0f172a;
+  --card:#0d1526;
+  --card2:#111827;
+  --border:#1e293b;
+  --border2:#334155;
+  --text:#e2e8f0;
+  --muted:#94a3b8;
+  --dim:#64748b;
+  --faint:#475569;
+  --header-bg:rgba(2,6,23,0.92);
+  --header-border:#1e293b;
+  --stepper-bg:#0f172a;
+  --card-active-bg:rgba(245,158,11,0.05);
+  --room-hdr-bg:#0f172a;
+  --room-hdr-open:rgba(245,158,11,0.06);
+  --size-strip-bg:rgba(245,158,11,0.04);
+  --shadow:0 1px 4px rgba(0,0,0,0.4);
+  --shadow-md:0 4px 16px rgba(0,0,0,0.5);
+  --input-bg:#0f172a;
+  --btn-ghost-bg:#0f172a;
+  --pwa-bg:rgba(9,15,35,0.97);
+  --est-cover-bg:linear-gradient(135deg,#0f172a 0%,#1a1030 100%);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;min-height:100vh;transition:background .3s,color .3s}
+
+/* ── HEADER ── */
+#app-header{
+  position:sticky;top:0;z-index:100;
+  background:var(--header-bg);backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--header-border);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 20px;gap:12px;
+  padding-top:max(12px,env(safe-area-inset-top));
+  box-shadow:var(--shadow);
+  transition:background .3s,border-color .3s;
+}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--amber),var(--orange));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.logo-text{font-family:'Syne',sans-serif;font-size:17px;font-weight:800;color:#f8fafc;letter-spacing:-.02em}
+.logo-sub{font-size:10px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
+
+/* ── THEME TOGGLE ── */
+.theme-toggle{
+  display:flex;align-items:center;gap:8px;
+  background:var(--surface);
+  border:1.5px solid var(--border2);
+  border-radius:50px;
+  padding:5px 10px 5px 8px;
+  cursor:pointer;
+  transition:all .25s;
+  flex-shrink:0;
+  box-shadow:var(--shadow);
+}
+.theme-toggle:hover{border-color:var(--amber);box-shadow:0 0 0 3px rgba(245,158,11,.15)}
+.theme-toggle-icon{font-size:16px;line-height:1;transition:transform .4s ease;display:inline-block}
+.theme-toggle-track{
+  width:36px;height:20px;
+  border-radius:10px;
+  background:var(--border2);
+  position:relative;
+  transition:background .3s;
+  flex-shrink:0;
+}
+[data-theme="dark"] .theme-toggle-track{background:var(--amber)}
+.theme-toggle-thumb{
+  width:16px;height:16px;
+  border-radius:50%;
+  background:#fff;
+  position:absolute;top:2px;left:2px;
+  transition:transform .3s cubic-bezier(.34,1.56,.64,1);
+  box-shadow:0 1px 4px rgba(0,0,0,.25);
+}
+[data-theme="dark"] .theme-toggle-thumb{transform:translateX(16px)}
+.theme-toggle-lbl{font-size:11px;font-weight:600;color:var(--dim);letter-spacing:.04em;white-space:nowrap}
+[data-theme="dark"] .theme-toggle-lbl{color:var(--amber)}
+.header-est{display:none;text-align:right}
+.he-lbl{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em}
+.he-val{font-family:'Syne',sans-serif;font-size:20px;font-weight:800;color:var(--amber)}
+.est-num{font-size:10px;color:var(--dim);margin-top:2px}
+
+/* ── STEPPER ── */
+#stepper{
+  display:flex;align-items:center;padding:10px 16px;
+  background:var(--stepper-bg);border-bottom:1px solid var(--border);
+  overflow-x:auto;gap:0;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  transition:background .3s;
+}
+#stepper::-webkit-scrollbar{display:none}
+.step-item{display:flex;align-items:center;flex-shrink:0}
+.step-dot{
+  width:28px;height:28px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;cursor:default;
+  background:var(--border2);color:var(--dim);
+  transition:all .25s;flex-shrink:0;
+}
+.step-dot.active{background:var(--amber);color:#0f172a;box-shadow:0 0 0 4px rgba(245,158,11,.2)}
+.step-dot.done{background:var(--green);color:#fff;cursor:pointer}
+.step-dot.done:hover{transform:scale(1.08)}
+.step-label{font-size:10px;color:var(--dim);margin-left:6px;white-space:nowrap;display:none}
+.step-dot.active+.step-label,.step-dot.done+.step-label{display:block;color:var(--muted)}
+.step-dot.active+.step-label{color:var(--amber)}
+.step-line{width:20px;height:1px;background:var(--border);margin:0 4px;flex-shrink:0;transition:background .3s}
+.step-line.done{background:var(--green)}
+
+/* ── LAYOUT ── */
+#main{max-width:760px;margin:0 auto;padding:20px 14px 100px}
+
+/* ── CARDS ── */
+.card{
+  background:var(--card);border:0.5px solid var(--border);
+  border-radius:14px;overflow:hidden;margin-bottom:10px;
+  transition:border-color .25s,box-shadow .25s,background .3s;
+  box-shadow:var(--shadow);
+}
+.card.active{border-color:var(--amber);box-shadow:0 0 0 3px rgba(245,158,11,.1)}
+.card.done{border-color:var(--green)}
+.card-hdr{
+  display:flex;align-items:center;gap:10px;padding:13px 16px;
+  background:var(--card);cursor:default;transition:background .2s;
+}
+.card.done .card-hdr{cursor:pointer}
+.card.done .card-hdr:hover{background:var(--surface)}
+.card.active .card-hdr{background:var(--card-active-bg)}
+.step-badge{
+  width:26px;height:26px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;flex-shrink:0;
+  background:var(--border2);color:var(--dim);
+  transition:all .25s;
+}
+.card.active .step-badge{background:var(--amber);color:#0f172a}
+.card.done .step-badge{background:var(--green);color:#fff}
+.card-title{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--dim)}
+.card.active .card-title{color:var(--amber)}
+.card.done .card-title{color:var(--green)}
+.card-sub{font-size:10px;color:var(--faint);margin-top:1px}
+.edit-tag{margin-left:auto;font-size:11px;color:var(--faint);padding:3px 8px;border:0.5px solid var(--border2);border-radius:5px}
+.card-body{padding:16px;border-top:1px solid var(--border)}
+
+/* ── INPUTS ── */
+input[type=text],input[type=number],input[type=email],select,textarea{
+  background:var(--input-bg);border:0.5px solid var(--border2);
+  border-radius:8px;padding:9px 12px;color:var(--text);
+  font-family:'DM Sans',sans-serif;font-size:13px;outline:none;
+  transition:border-color .2s,background .3s;width:100%;
+  -webkit-appearance:none;
+}
+/* Prevent iOS zoom on input focus */
+@media(max-width:600px){
+  input[type=text],input[type=number],input[type=email],select,textarea{font-size:16px}
+}
+input[type=text]:focus,input[type=number]:focus,input[type=email]:focus,select:focus,textarea:focus{border-color:var(--amber)}
+textarea{resize:vertical;min-height:70px}
+select{cursor:pointer}
+.field{margin-bottom:12px}
+.field-label{font-size:11px;color:var(--muted);margin-bottom:4px;display:flex;align-items:center;gap:6px}
+.tip{display:inline-flex;width:14px;height:14px;border-radius:50%;background:var(--border2);color:var(--dim);font-size:9px;align-items:center;justify-content:center;cursor:help;flex-shrink:0}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;transition:all .18s;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.btn-primary{background:linear-gradient(135deg,var(--amber),var(--orange));color:#0f172a;border:none}
+.btn-primary:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn-ghost{background:var(--btn-ghost-bg);border:0.5px solid var(--border2);color:var(--text);transition:background .2s}
+.btn-ghost:hover{border-color:var(--muted)}
+.btn-danger{background:var(--surface);border:0.5px solid rgba(239,68,68,.4);color:var(--red)}
+.btn-success{background:var(--green);border:none;color:#fff}
+.btn-sm{padding:5px 12px;font-size:11px}
+
+/* ── SCOPE ── */
+.scope-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:8px}
+.scope-btn{background:var(--surface);border:1.5px solid var(--border2);border-radius:10px;padding:13px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;transition:all .15s}
+.scope-btn:hover{border-color:var(--muted)}
+.scope-btn.on{border-color:var(--amber);background:rgba(245,158,11,.08)}
+.scope-icon{font-size:22px}
+.scope-lbl{font-size:11px;font-weight:600;color:var(--muted);text-align:center;line-height:1.3}
+.scope-btn.on .scope-lbl{color:var(--amber)}
+
+/* ── ROOM BLOCKS ── */
+.room-block{border:0.5px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden}
+.room-hdr{display:flex;align-items:center;gap:8px;padding:9px 12px;background:var(--room-hdr-bg);cursor:pointer;user-select:none;flex-wrap:wrap;transition:background .2s}
+.room-hdr:hover{filter:brightness(.97)}
+.room-hdr.open{background:var(--room-hdr-open);border-bottom:0.5px solid var(--border)}
+.room-icon{font-size:17px;flex-shrink:0}
+.room-name{font-size:13px;font-weight:600;color:var(--text);flex:1}
+.room-subtotal{font-size:12px;font-weight:700;color:var(--amber)}
+.room-chev{font-size:10px;color:var(--faint);transition:transform .2s}
+.room-chev.open{transform:rotate(180deg)}
+.qty-ctrl{display:flex;align-items:center;gap:4px}
+.qbtn{width:24px;height:24px;border-radius:5px;border:0.5px solid var(--border2);background:var(--card);color:var(--text);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1}
+.qbtn:hover{background:var(--surface)}
+.qval{width:20px;text-align:center;font-size:12px;font-weight:700;color:var(--text)}
+.size-strip{display:flex;align-items:center;gap:6px;padding:8px 12px;background:var(--size-strip-bg);border-bottom:0.5px solid var(--border);flex-wrap:wrap;transition:background .3s}
+.size-strip label{font-size:11px;color:var(--muted)}
+.size-inp{width:70px!important;padding:5px 8px!important;font-size:12px!important;text-align:center}
+.sqft-tag{font-size:10px;color:var(--amber);font-style:italic}
+.room-actions{display:flex;gap:6px;padding:6px 12px;background:rgba(0,0,0,.2);border-bottom:0.5px solid var(--border)}
+.items-grid{padding:8px 12px;display:grid;grid-template-columns:1fr 1fr;gap:1px 10px}
+.wi{display:flex;align-items:flex-start;gap:7px;padding:5px 0;cursor:pointer;user-select:none;border-bottom:0.5px solid rgba(30,41,59,.6)}
+.wi:last-child{border-bottom:none}
+.cbox{width:15px;height:15px;border-radius:3px;border:1.5px solid var(--border2);background:transparent;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;margin-top:1px}
+.wi.on .cbox,.ci.on .cbox{background:var(--amber);border-color:var(--amber)}
+.ctick{display:none;color:#0f172a;font-size:8px;font-weight:900}
+.wi.on .ctick,.ci.on .ctick{display:block}
+.wi-info{flex:1;min-width:0}
+.wi-lbl{font-size:11px;color:var(--muted);line-height:1.3}
+.wi.on .wi-lbl{color:var(--text)}
+.wi-cost{font-size:10px;color:var(--faint);margin-top:1px}
+.wi.on .wi-cost{color:var(--amber)}
+.ppsf-tag{font-size:8px;color:var(--amber);font-style:italic}
+
+/* ── CHECKLIST ── */
+.chk-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:1px 8px;margin-bottom:12px}
+.ci{display:flex;align-items:center;gap:8px;padding:5px 0;cursor:pointer;user-select:none}
+.clbl{font-size:12px;color:var(--muted)}
+.ci.on .clbl{color:var(--text)}
+
+/* ── YES/NO ── */
+.yn-row{display:flex;gap:8px;margin-bottom:12px}
+.yn-btn{flex:1;padding:9px;border-radius:8px;border:1.5px solid var(--border2);background:var(--surface);color:var(--muted);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
+.yn-btn.on{border-color:var(--amber);color:var(--amber);background:rgba(245,158,11,.08)}
+
+/* ── QUALITY ── */
+.q-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.q-btn{background:var(--surface);border:1.5px solid var(--border2);border-radius:10px;padding:12px 8px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;transition:all .15s}
+.q-icon{font-size:20px}
+.q-name{font-size:11px;font-weight:700;color:var(--muted);text-align:center}
+.q-desc{font-size:10px;color:var(--faint);text-align:center;line-height:1.4}
+
+/* ── TWO COL ── */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:12px}
+.col-hd{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}
+
+/* ── MARGIN ── */
+.m-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.m-lbl{font-size:12px;color:var(--muted)}
+.m-note{padding:7px 12px;background:var(--surface);border:0.5px solid var(--border);border-radius:7px;font-size:11px;color:var(--muted)}
+#mv{width:70px!important;text-align:center}
+
+/* ── UPLOAD ── */
+.upload-zone{border:1.5px dashed var(--border2);border-radius:10px;padding:16px;text-align:center;cursor:pointer;transition:all .2s;margin-bottom:10px}
+.upload-zone:hover,.upload-zone.has{border-color:var(--amber);border-style:solid}
+.file-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(76px,1fr));gap:8px;margin-bottom:10px}
+.file-thumb{position:relative;border-radius:7px;overflow:hidden;border:0.5px solid var(--border);background:var(--surface)}
+.file-thumb img{width:100%;height:62px;object-fit:cover;display:block}
+.f-name{font-size:9px;color:var(--dim);padding:3px 5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.del-btn{position:absolute;top:2px;right:2px;width:16px;height:16px;border-radius:50%;background:rgba(0,0,0,.7);color:#fff;border:none;cursor:pointer;font-size:9px;display:flex;align-items:center;justify-content:center}
+.doc-inner{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 6px;min-height:62px;font-size:20px}
+
+/* ── DIVIDER ── */
+.divider{height:0.5px;background:var(--border);margin:14px 0}
+.sec-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--faint);margin-bottom:8px}
+
+/* ── ESTIMATE OUTPUT ── */
+.est-wrap{border:1px solid rgba(245,158,11,.4);border-radius:14px;overflow:hidden;margin-bottom:12px;box-shadow:0 0 40px rgba(245,158,11,.06)}
+
+/* Cover card */
+.est-cover{background:var(--est-cover-bg);padding:20px;border-bottom:1px solid var(--border);transition:background .3s}
+.est-cover-top{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:16px}
+.est-co-name{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--amber)}
+.est-co-sub{font-size:11px;color:var(--dim);margin-top:2px}
+.est-meta{text-align:right}
+.est-num-badge{font-size:10px;color:var(--dim);letter-spacing:.06em}
+.est-date{font-size:12px;color:var(--muted);margin-top:2px}
+.est-expiry{font-size:10px;color:var(--faint);margin-top:1px}
+.est-parties{display:grid;grid-template-columns:1fr 1fr;gap:16px;padding-top:14px;border-top:0.5px solid var(--border)}
+.party-lbl{font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px}
+.party-val{font-size:13px;color:var(--text);font-weight:500}
+.party-sub{font-size:11px;color:var(--muted)}
+.est-body{padding:16px;background:var(--card)}
+
+/* Summary tiles */
+.summary-tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-bottom:14px}
+.stile{background:var(--surface);border:0.5px solid var(--border);border-radius:8px;padding:10px 12px}
+.stile-lbl{font-size:9px;color:var(--faint);text-transform:uppercase;letter-spacing:.07em}
+.stile-val{font-size:13px;color:var(--text);font-weight:600;margin-top:3px}
+
+/* Loc adj */
+.adj-box{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;background:var(--surface);border:0.5px solid var(--border);border-radius:8px;padding:10px 12px;margin-bottom:12px}
+.adj-pct{font-size:18px;font-weight:700}
+
+/* Itemized */
+.itemized-list{border:0.5px solid var(--border);border-radius:8px;overflow:hidden;margin-bottom:12px}
+.il-row{display:flex;justify-content:space-between;align-items:center;padding:6px 12px;border-bottom:0.5px solid rgba(30,41,59,.5);font-size:11px}
+.il-row:last-child{border-bottom:none}
+.il-row:nth-child(even){background:rgba(255,255,255,.01)}
+.il-label{color:var(--muted);flex:1;margin-right:10px}
+.il-val{font-weight:600;color:var(--text);white-space:nowrap}
+
+/* Cost bars */
+.bar-row{margin-bottom:9px}
+.bar-top{display:flex;justify-content:space-between;margin-bottom:3px}
+.bar-lbl{font-size:11px;color:var(--muted)}
+.bar-val{font-size:12px;font-weight:600}
+.bar-track{height:4px;background:var(--border);border-radius:2px;overflow:hidden}
+.bar-fill{height:100%;border-radius:2px;transition:width .5s ease}
+
+/* Totals */
+.tot-box{
+  background:linear-gradient(135deg,rgba(245,158,11,.12),rgba(239,68,68,.08));
+  border:1px solid rgba(245,158,11,.3);
+  border-radius:10px;padding:16px;
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:10px;
+}
+.tot-lbl{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+.tot-sub{font-size:10px;color:var(--faint);margin-top:2px}
+.tot-val{font-family:'Syne',sans-serif;font-size:30px;font-weight:800;color:var(--amber)}
+.range-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+.rc{background:var(--surface);border:0.5px solid var(--border);border-radius:8px;padding:10px 12px}
+.rc-lbl{font-size:9px;color:var(--faint);text-transform:uppercase;letter-spacing:.07em}
+.rc-val{font-size:15px;font-weight:700;margin-top:3px}
+
+/* Notes box */
+.notes-box{background:var(--surface);border:0.5px solid var(--border);border-radius:8px;padding:12px;margin-bottom:12px;font-size:11px;color:var(--muted);line-height:1.6;white-space:pre-wrap}
+
+/* Disclaimer */
+.est-disclaimer{font-size:10px;color:var(--faint);line-height:1.7;padding:12px;background:rgba(0,0,0,.2);border-radius:8px;margin-bottom:12px}
+
+/* Actions */
+.act-row{display:flex;flex-wrap:wrap;gap:8px}
+
+/* Stamp */
+.validity-stamp{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 12px;border:0.5px solid rgba(34,197,94,.3);
+  background:rgba(34,197,94,.06);border-radius:8px;
+  font-size:11px;color:var(--green);margin-bottom:10px;
+}
+
+/* Disc */
+.disc{background:var(--surface);border:0.5px solid var(--border);border-radius:8px;padding:10px;font-size:10px;color:var(--faint);line-height:1.7;margin-top:12px;transition:background .3s}
+
+/* ── VOICE BUTTON ── */
+.btn-voice{
+  width:42px;height:42px;border-radius:50%;border:2px solid var(--border2);
+  background:var(--surface);font-size:18px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;flex-shrink:0;
+}
+.btn-voice:hover{border-color:var(--amber);background:rgba(245,158,11,.08)}
+.btn-voice.recording{
+  border-color:var(--red);background:rgba(239,68,68,.1);
+  animation:pulse-rec .8s infinite;
+}
+@keyframes pulse-rec{
+  0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4)}
+  50%{box-shadow:0 0 0 8px rgba(239,68,68,0)}
+}
+
+/* ── DASHBOARD ── */
+.dashboard-wrap{padding:0}
+.dash-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.dash-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:800;color:var(--text)}
+.dash-count{font-size:12px;color:var(--muted);margin-top:2px}
+.est-card-item{
+  background:var(--surface);border:0.5px solid var(--border);
+  border-radius:10px;padding:13px 15px;margin-bottom:8px;
+  cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:12px;
+}
+.est-card-item:hover{border-color:var(--amber);background:rgba(245,158,11,.04)}
+.est-card-icon{width:38px;height:38px;border-radius:8px;background:linear-gradient(135deg,var(--amber),var(--orange));display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.est-card-info{flex:1;min-width:0}
+.est-card-name{font-size:13px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.est-card-meta{font-size:11px;color:var(--muted);margin-top:2px}
+.est-card-total{font-size:15px;font-weight:700;color:var(--amber);flex-shrink:0}
+.est-card-del{background:none;border:none;color:var(--faint);font-size:16px;cursor:pointer;padding:4px 8px;border-radius:6px;flex-shrink:0}
+.est-card-del:hover{color:var(--red);background:rgba(239,68,68,.08)}
+.empty-state{text-align:center;padding:32px 16px;color:var(--faint)}
+.empty-icon{font-size:40px;margin-bottom:10px}
+.empty-text{font-size:13px;line-height:1.6}
+
+/* ── VOICE BUTTON ── */
+.voice-btn{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:9px 16px;border-radius:8px;border:1.5px solid var(--border2);
+  background:var(--surface);color:var(--muted);
+  font-size:12px;font-weight:600;cursor:pointer;
+  transition:all .2s;font-family:'DM Sans',sans-serif;
+}
+.voice-btn:hover{border-color:var(--red);color:var(--red)}
+.voice-btn.recording{
+  border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red);
+  animation:pulse-rec .8s infinite alternate;
+}
+@keyframes pulse-rec{from{box-shadow:0 0 0 0 rgba(239,68,68,.4)}to{box-shadow:0 0 0 8px rgba(239,68,68,0)}}
+.voice-dot{width:8px;height:8px;border-radius:50%;background:var(--muted);transition:background .2s}
+.voice-btn.recording .voice-dot{background:var(--red)}
+.voice-transcript{
+  margin-top:8px;padding:8px 12px;
+  background:rgba(239,68,68,.06);border:0.5px solid rgba(239,68,68,.2);
+  border-radius:8px;font-size:12px;color:var(--muted);
+  font-style:italic;display:none;
+}
+.voice-transcript.show{display:block}
+
+/* Light mode card shadows */
+[data-theme="light"] .card{box-shadow:0 1px 6px rgba(0,0,0,.07),0 0 0 0.5px rgba(0,0,0,.04)}
+[data-theme="light"] .room-block{box-shadow:0 1px 4px rgba(0,0,0,.06)}
+[data-theme="light"] .card.active{box-shadow:0 0 0 2px rgba(245,158,11,.25),0 2px 8px rgba(245,158,11,.12)}
+[data-theme="light"] .card.done{box-shadow:0 0 0 2px rgba(34,197,94,.2),0 2px 6px rgba(34,197,94,.08)}
+[data-theme="light"] .est-wrap{box-shadow:0 4px 24px rgba(245,158,11,.15)}
+[data-theme="light"] .step-dot{background:#e5e7eb;color:#6b7280}
+[data-theme="light"] .step-dot.active{background:var(--amber);color:#fff;box-shadow:0 0 0 4px rgba(245,158,11,.2)}
+[data-theme="light"] .step-dot.done{background:var(--green);color:#fff}
+[data-theme="light"] .step-line{background:#e5e7eb}
+[data-theme="light"] .step-line.done{background:var(--green)}
+[data-theme="light"] .step-badge{background:#e5e7eb;color:#6b7280}
+[data-theme="light"] .scope-btn{background:#f8f9fb;border-color:#e2e5ea}
+[data-theme="light"] .scope-btn:hover{border-color:#d0d5dd;background:#f0f1f4}
+[data-theme="light"] .scope-btn.on{background:rgba(245,158,11,.08);border-color:var(--amber)}
+[data-theme="light"] .q-btn{background:#f8f9fb;border-color:#e2e5ea}
+[data-theme="light"] .yn-btn{background:#f8f9fb;border-color:#e2e5ea}
+[data-theme="light"] .yn-btn.on{background:rgba(245,158,11,.08);border-color:var(--amber)}
+[data-theme="light"] .wi{border-bottom-color:rgba(0,0,0,.06)}
+[data-theme="light"] .room-actions{background:rgba(0,0,0,.03);border-bottom-color:rgba(0,0,0,.06)}
+[data-theme="light"] .items-grid{background:#fff}
+[data-theme="light"] .info-bar{background:rgba(59,130,246,.07);color:#1d4ed8;border-color:rgba(59,130,246,.2)}
+[data-theme="light"] .m-note{background:#f8f9fb;border-color:#e2e5ea}
+[data-theme="light"] .validity-stamp{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.25);color:#15803d}
+[data-theme="light"] .est-disclaimer{background:#f8f9fb;border-color:#e2e5ea;color:#6b7280}
+[data-theme="light"] .notes-box{background:#f8f9fb;border-color:#e2e5ea;color:#374151}
+[data-theme="light"] .itemized-list{border-color:#e2e5ea}
+[data-theme="light"] .il-row{border-bottom-color:#f0f1f4}
+[data-theme="light"] .il-row:nth-child(even){background:#fafbfc}
+[data-theme="light"] .stile{background:#f8f9fb;border-color:#e2e5ea}
+[data-theme="light"] .adj-box{background:#f8f9fb;border-color:#e2e5ea}
+[data-theme="light"] .tot-box{background:linear-gradient(135deg,rgba(245,158,11,.1),rgba(249,115,22,.07));border-color:rgba(245,158,11,.35)}
+[data-theme="light"] .rc{background:#f8f9fb;border-color:#e2e5ea}
+[data-theme="light"] .bar-track{background:#e5e7eb}
+[data-theme="light"] .qbtn{background:#f8f9fb;border-color:#d0d5dd}
+[data-theme="light"] .size-inp{background:#fff!important}
+[data-theme="light"] .upload-zone{border-color:#d0d5dd}
+[data-theme="light"] .file-thumb{border-color:#e2e5ea;background:#f8f9fb}
+[data-theme="light"] select{color:var(--text);background:var(--input-bg)}
+[data-theme="light"] .logo-text{color:#111827}
+[data-theme="light"] #app-header{border-bottom-color:#e2e5ea}
+
+/* ── PWA INSTALL BANNER ── */
+#pwa-banner{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;z-index:999;
+  background:var(--pwa-bg);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-top:1px solid rgba(245,158,11,.4);
+  padding:14px 16px 20px;
+  box-shadow:0 -8px 32px rgba(0,0,0,.5);
+  animation:slideUp .4s ease;
+}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+#pwa-banner.show{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.pwa-icon{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--amber),var(--orange));display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.pwa-text{flex:1;min-width:160px}
+.pwa-title{font-size:14px;font-weight:700;color:var(--text)}
+.pwa-sub{font-size:11px;color:var(--muted);margin-top:2px}
+.pwa-actions{display:flex;gap:8px;flex-shrink:0}
+.pwa-install-btn{background:linear-gradient(135deg,var(--amber),var(--orange));color:#0f172a;border:none;border-radius:8px;padding:9px 18px;font-size:13px;font-weight:700;cursor:pointer}
+.pwa-dismiss-btn{background:transparent;border:0.5px solid var(--border2);color:var(--muted);border-radius:8px;padding:9px 14px;font-size:12px;cursor:pointer}
+
+/* iOS install tip */
+#ios-tip{
+  display:none;
+  position:fixed;bottom:0;left:0;right:0;z-index:999;
+  background:linear-gradient(135deg,#0f172a,#1a1030);
+  border-top:1px solid rgba(245,158,11,.4);
+  padding:16px;text-align:center;
+  box-shadow:0 -8px 32px rgba(0,0,0,.5);
+  animation:slideUp .4s ease;
+}
+#ios-tip.show{display:block}
+.ios-tip-title{font-size:14px;font-weight:700;color:var(--amber);margin-bottom:6px}
+.ios-tip-text{font-size:12px;color:var(--muted);line-height:1.7}
+.ios-tip-close{margin-top:12px;background:var(--surface);border:0.5px solid var(--border2);color:var(--muted);border-radius:8px;padding:8px 20px;font-size:12px;cursor:pointer}
+.ios-arrow{font-size:20px;display:inline-block;animation:bounce .8s infinite alternate}
+@keyframes bounce{from{transform:translateY(0)}to{transform:translateY(6px)}}
+
+/* Safe area padding for phones with notch */
+#main{padding-bottom:calc(100px + env(safe-area-inset-bottom))}
+#pwa-banner,#ios-tip{padding-bottom:calc(20px + env(safe-area-inset-bottom))}
+
+/* Inst label */
+.inst-lbl{font-size:10px;color:var(--faint);padding:5px 12px 0;text-transform:uppercase;letter-spacing:.05em}
+
+/* Info bar */
+.info-bar{display:flex;align-items:center;gap:6px;padding:8px 12px;background:rgba(59,130,246,.08);border-radius:7px;font-size:11px;color:var(--blue);margin-bottom:12px}
+
+/* Badge */
+.badge{display:inline-flex;align-items:center;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:600}
+.badge-amber{background:rgba(245,158,11,.15);color:var(--amber)}
+.badge-green{background:rgba(34,197,94,.15);color:var(--green)}
+.badge-red{background:rgba(239,68,68,.15);color:var(--red)}
+
+@media(max-width:600px){
+  /* Forms */
+  .form-row,.form-row3{grid-template-columns:1fr}
+  .two-col{grid-template-columns:1fr}
+  .q-grid{grid-template-columns:1fr 1fr}
+  .range-grid{grid-template-columns:1fr}
+  .items-grid{grid-template-columns:1fr}
+  .est-parties{grid-template-columns:1fr}
+  .summary-tiles{grid-template-columns:1fr 1fr}
+
+  /* Header */
+  #app-header{padding:10px 12px}
+  .logo-text{font-size:15px}
+  .he-val{font-size:17px}
+
+  /* Stepper — hide labels, just show dots */
+  .step-label{display:none!important}
+  .step-dot{width:22px;height:22px;font-size:10px}
+  .step-line{width:10px;margin:0 2px}
+  #stepper{padding:10px 12px;gap:0}
+
+  /* Main */
+  #main{padding:12px 10px 120px}
+
+  /* Cards */
+  .card-body{padding:12px}
+  .card-hdr{padding:11px 12px}
+  .card-title{font-size:10px}
+
+  /* Room blocks */
+  .room-hdr{padding:9px 10px}
+  .room-name{font-size:12px}
+  .size-strip{padding:7px 10px;gap:5px}
+  .size-inp{width:62px!important;padding:5px 6px!important;font-size:12px!important}
+  .items-grid{padding:6px 10px;gap:1px 6px}
+  .wi{padding:5px 0}
+  .wi-lbl{font-size:11px}
+  .wi-cost{font-size:10px}
+  .room-actions{padding:5px 10px;gap:5px}
+
+  /* Scope buttons */
+  .scope-grid{grid-template-columns:repeat(2,1fr);gap:8px}
+  .scope-icon{font-size:20px}
+  .scope-lbl{font-size:11px}
+
+  /* Inputs */
+  input[type=text],input[type=number],input[type=email],select,textarea{
+    font-size:16px!important; /* prevents iOS zoom on focus */
+    padding:10px 12px
+  }
+  .size-inp{font-size:14px!important}
+
+  /* Buttons */
+  .btn{padding:10px 14px;font-size:13px}
+  .btn-sm{padding:6px 10px;font-size:11px}
+
+  /* Margin row */
+  .m-row{gap:8px}
+  .m-lbl{font-size:12px}
+  .m-note{font-size:11px;padding:6px 10px}
+
+  /* Estimate */
+  .est-cover{padding:14px}
+  .est-cover-top{flex-direction:column;gap:10px}
+  .est-meta{text-align:left}
+  .est-co-name{font-size:16px}
+  .summary-tiles{grid-template-columns:1fr 1fr}
+  .stile{padding:8px 10px}
+  .stile-lbl{font-size:9px}
+  .stile-val{font-size:12px}
+  .tot-val{font-size:24px}
+  .tot-box{padding:12px}
+  .bar-lbl{font-size:11px}
+  .bar-val{font-size:12px}
+  .il-row{padding:5px 10px;font-size:11px}
+  .rc-val{font-size:14px}
+  .act-row{gap:6px}
+  .act-row .btn{flex:1;justify-content:center;font-size:12px;padding:10px 8px}
+
+  /* PWA banner */
+  #pwa-banner.show{flex-direction:column;gap:10px;padding:14px 14px 28px}
+  .pwa-actions{width:100%;justify-content:stretch}
+  .pwa-install-btn,.pwa-dismiss-btn{flex:1;text-align:center}
+
+  /* Checklist */
+  .chk-grid{grid-template-columns:1fr}
+  .clbl{font-size:13px}
+
+  /* Quality */
+  .q-btn{padding:10px 8px}
+  .q-icon{font-size:18px}
+  .q-name{font-size:11px}
+  .q-desc{font-size:10px}
+
+  /* Info bar */
+  .info-bar{font-size:11px;padding:7px 10px}
+
+  /* Fields */
+  .field{margin-bottom:10px}
+  .field-label{font-size:11px}
+}
+
+/* Extra small phones */
+@media(max-width:380px){
+  .scope-grid{grid-template-columns:repeat(2,1fr)}
+  .q-grid{grid-template-columns:1fr}
+  .summary-tiles{grid-template-columns:1fr}
+  .act-row{flex-direction:column}
+  .act-row .btn{width:100%}
+}
+
+/* iPad / tablet */
+@media(min-width:601px) and (max-width:900px){
+  #main{max-width:100%;padding:16px}
+  .form-row3{grid-template-columns:1fr 1fr}
+  .scope-grid{grid-template-columns:repeat(3,1fr)}
+}
+
+/* Safe area for iPhone notch/home bar */
+@supports(padding:max(0px)){
+  #app-header{padding-top:max(12px,env(safe-area-inset-top))}
+  #pwa-banner,#ios-tip{padding-bottom:max(20px,env(safe-area-inset-bottom))}
+  #main{padding-bottom:max(120px,calc(100px + env(safe-area-inset-bottom)))}
+}
+.price-override-inp{transition:border-color .2s}
+.price-override-inp:focus{outline:none;border-color:var(--orange)!important;box-shadow:0 0 0 2px rgba(249,115,22,.15)}
+.price-override-inp::placeholder{color:var(--faint)}
+/* Light mode override input */
+[data-theme="light"] .price-override-inp{background:#fff;color:var(--text)}
+
+@media print{
+  #app-header,#stepper,#sections,.disc,
+  .act-row,.validity-stamp,.no-print,.price-override{display:none!important}
+  #estimate{display:block!important}
+  .est-wrap{border:1px solid #ccc;box-shadow:none!important}
+  .print-only{display:block!important}
+  body{background:#fff;color:#000}
+  .est-cover{background:#f8f8f8!important;-webkit-print-color-adjust:exact}
+  .bar-fill{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .tot-box{background:#fff8e7!important;-webkit-print-color-adjust:exact}
+  .itemized-list .il-row:nth-child(even){background:#f9f9f9!important;-webkit-print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<script>
+// Run theme init immediately to prevent flash of wrong theme
+(function(){
+  let t;try{t=localStorage.getItem("renovateiq_theme");}catch(e){}
+  if(!t)t=window.matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light";
+  document.documentElement.setAttribute("data-theme",t);
+})();
+</script>
+
+<div id="app-header">
+  <div class="logo">
+    <div class="logo-icon">🏗️</div>
+    <div>
+      <div class="logo-text">RenovateIQ <span style="font-size:11px;color:var(--amber);font-family:'DM Sans'">PRO</span></div>
+      <div class="logo-sub">Professional Renovation Estimator</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:10px;flex-shrink:0">
+    <button onclick="showDashboard()" style="background:var(--surface);border:0.5px solid var(--border2);border-radius:8px;padding:6px 10px;color:var(--muted);font-size:11px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:5px;white-space:nowrap" title="My Estimates">
+      📋 <span style="display:none" class="dash-btn-lbl">My Estimates</span>
+    </button>
+    <div class="header-est" id="header-est">
+      <div class="he-lbl">Live Estimate</div>
+      <div class="he-val" id="he-val">$0</div>
+      <div class="est-num" id="he-num"></div>
+    </div>
+    <button class="theme-toggle" id="theme-toggle-btn" onclick="toggleTheme()" aria-label="Toggle dark/light mode" title="Switch between light and dark mode">
+      <span class="theme-toggle-icon" id="theme-icon">☀️</span>
+      <div class="theme-toggle-track"><div class="theme-toggle-thumb"></div></div>
+      <span class="theme-toggle-lbl" id="theme-lbl">LIGHT</span>
+    </button>
+  </div>
+</div>
+
+<div id="stepper"></div>
+
+<!-- Dashboard Modal -->
+<div id="dashboard-modal" style="display:none;position:fixed;inset:0;z-index:200;background:rgba(0,0,0,.6);backdrop-filter:blur(8px);padding:16px;overflow-y:auto">
+  <div style="max-width:600px;margin:0 auto;background:var(--card);border-radius:16px;border:1px solid var(--border);overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 18px;border-bottom:1px solid var(--border);background:var(--surface)">
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--text)">📋 My Estimates</div>
+        <div style="font-size:11px;color:var(--muted);margin-top:2px" id="dash-subtitle">Saved on this device</div>
+      </div>
+      <button onclick="closeDashboard()" style="background:var(--surface);border:0.5px solid var(--border2);border-radius:8px;padding:6px 12px;color:var(--muted);font-size:13px;cursor:pointer">✕ Close</button>
+    </div>
+    <div style="padding:16px" id="dashboard-list">
+      <div class="empty-state"><div class="empty-icon">📄</div><div class="empty-text">No saved estimates yet.<br>Complete an estimate and tap Save.</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PWA Install Banner (Android / Desktop) -->
+<div id="pwa-banner">
+  <div class="pwa-icon">🏗️</div>
+  <div class="pwa-text">
+    <div class="pwa-title">Install RenovateIQ Pro</div>
+    <div class="pwa-sub">Add to your home screen — works offline, no App Store needed</div>
+  </div>
+  <div class="pwa-actions">
+    <button class="pwa-install-btn" id="pwa-install-btn">Install App</button>
+    <button class="pwa-dismiss-btn" id="pwa-dismiss-btn">Not now</button>
+  </div>
+</div>
+
+<!-- iOS Install Tip (Safari only) -->
+<div id="ios-tip">
+  <div class="ios-tip-title">📲 Install RenovateIQ Pro</div>
+  <div class="ios-tip-text">
+    Tap the <strong>Share button</strong> below, then select<br/>
+    <strong>"Add to Home Screen"</strong> to install as an app
+    <br/><span class="ios-arrow">↓</span>
+  </div>
+  <button class="ios-tip-close" id="ios-tip-close">Got it</button>
+</div>
+
+<div id="main">
+  <div id="sections"></div>
+  <div id="estimate" style="display:none"></div>
+  <div class="disc">
+    ⚠️ <strong style="color:var(--muted)">Disclaimer:</strong> All estimates are based on national average contractor pricing adjusted by regional cost data. Actual costs vary based on site conditions, material availability, contractor availability, permit requirements, and market timing. This estimate does not constitute a contract or guarantee of price. Always obtain a minimum of three written quotes from licensed, insured contractors before committing to any renovation project. Permit fees, utility connection fees, HOA fees, and unforeseen structural issues are not included unless specified.
+  </div>
+</div>
+
+<script>
+// ── LOCATION DATA ──────────────────────────────────────────────────────────────
+const CITY_MX={"san francisco":1.85,"palo alto":1.80,"san jose":1.75,"new york":1.75,"nyc":1.75,"brooklyn":1.65,"manhattan":1.80,"boston":1.60,"cambridge":1.65,"washington dc":1.55,"washington, dc":1.55,"seattle":1.55,"bellevue":1.58,"honolulu":1.65,"los angeles":1.55,"santa monica":1.60,"beverly hills":1.70,"san diego":1.45,"miami":1.40,"miami beach":1.45,"chicago":1.30,"denver":1.25,"boulder":1.30,"portland":1.30,"austin":1.25,"nashville":1.20,"minneapolis":1.18,"phoenix":1.10,"scottsdale":1.18,"atlanta":1.15,"dallas":1.12,"houston":1.10,"charlotte":1.10,"raleigh":1.12,"richmond":1.08,"indianapolis":1.00,"columbus":1.00,"cleveland":0.95,"cincinnati":0.95,"pittsburgh":0.98,"detroit":0.95,"st louis":0.95,"kansas city":0.95,"omaha":0.92,"memphis":0.88,"birmingham":0.88,"new orleans":0.95,"las vegas":1.08,"salt lake city":1.10,"boise":1.05,"anchorage":1.40,"oklahoma city":0.88,"tulsa":0.88,"tampa":1.05,"orlando":1.05,"fort lauderdale":1.12,"jacksonville":0.95,"hartford":1.20,"stamford":1.35,"newark":1.30,"jersey city":1.40,"philadelphia":1.25,"baltimore":1.18,"tacoma":1.25,"reno":1.05,"ramsey":1.32,"hackensack":1.30,"trenton":1.15,"parsippany":1.28,"wayne":1.28,"morristown":1.30,"princeton":1.35};
+const STATE_MX={CA:1.55,NY:1.50,MA:1.45,WA:1.40,CT:1.30,NJ:1.32,MD:1.28,HI:1.60,AK:1.38,DC:1.55,CO:1.22,OR:1.25,IL:1.20,VA:1.18,MN:1.12,UT:1.10,NV:1.08,FL:1.08,TX:1.10,AZ:1.05,NC:1.05,GA:1.05,TN:1.00,SC:0.95,PA:1.05,OH:0.97,MI:0.95,WI:1.00,MO:0.95,IN:0.95,KY:0.92,AL:0.88,MS:0.85,AR:0.87,LA:0.92,OK:0.88,KS:0.88,NE:0.90,IA:0.90,SD:0.88,ND:0.90,MT:0.95,WY:0.92,ID:1.00,NM:0.90,ME:1.05,NH:1.08,VT:1.10,RI:1.18,DE:1.05,WV:0.88};
+
+// Permit fee estimates by scope
+// Permit fees by individual work type (realistic 2024 national averages)
+// These are PER ITEM fees, not per project scope
+const ITEM_PERMIT_FEES={
+  // HVAC
+  hvac_replace:   {b:75,  a:175, l:400},   // Replace AC/furnace
+  hvac_new:       {b:150, a:300, l:600},    // New HVAC system
+  hvac_ductwork:  {b:75,  a:150, l:300},    // Ductwork only
+  // Rooms (per room renovation)
+  kitchen:        {b:200, a:500, l:1200},   // Kitchen reno
+  bathroom:       {b:150, a:350, l:800},    // Bathroom reno
+  bedroom:        {b:0,   a:75,  l:150},    // Minor — usually no permit
+  addition:       {b:800, a:2000,l:5000},   // Room addition
+  // Electrical
+  elec_panel:     {b:200, a:400, l:800},    // Panel upgrade
+  elec_circuit:   {b:50,  a:100, l:200},    // Per circuit
+  // Plumbing
+  plumbing:       {b:150, a:300, l:600},    // Plumbing work
+  // Structural
+  wall_remove:    {b:200, a:500, l:1200},   // Remove/move walls
+  // Exterior
+  roof:           {b:150, a:350, l:700},    // Roof replacement
+  siding:         {b:100, a:250, l:500},    // Siding
+  windows_bulk:   {b:100, a:200, l:400},    // Bulk window replacement
+  deck:           {b:200, a:500, l:1200},   // Deck/patio
+  // Systems
+  solar:          {b:300, a:600, l:1200},   // Solar panels
+  // Lawn/landscape: usually no permit unless major grading
+  lawn:           {b:0,   a:0,   l:100},
+};
+
+// Calculate realistic permit fees based on what was actually selected
+function calcPermitFees(mx){
+  if(!st.includePermits)return 0;
+  const q=qk();
+  let total=0;
+  // HVAC permits
+  if(st.hvac.includes("New HVAC System"))total+=ITEM_PERMIT_FEES.hvac_new[q];
+  if(st.hvac.includes("Replace Existing System"))total+=ITEM_PERMIT_FEES.hvac_replace[q]*(st.hvacSpecs?.units||1);
+  if(st.hvac.includes("Ductwork Modifications"))total+=ITEM_PERMIT_FEES.hvac_ductwork[q];
+  // Room permits
+  rooms.forEach(r=>{
+    if(r.qty>0){
+      if(r.key==="kitchen")total+=ITEM_PERMIT_FEES.kitchen[q]*r.qty;
+      else if(r.key==="basement")total+=ITEM_PERMIT_FEES.addition[q]*r.qty;
+      else if(r.key==="bedroom"||r.key==="living"||r.key==="dining"||r.key==="office")total+=ITEM_PERMIT_FEES.bedroom[q]*r.qty;
+    }
+  });
+  // Bath permits
+  baths.forEach(b=>{if(b.qty>0)total+=ITEM_PERMIT_FEES.bathroom[q]*b.qty;});
+  // Electrical permits
+  if(st.otherItems.includes("elec_panel"))total+=ITEM_PERMIT_FEES.elec_panel[q];
+  // Structural permits
+  if(st.layItems.includes("Remove Wall(s)")||st.layItems.includes("Move Wall(s)")||st.layItems.includes("Open Concept"))
+    total+=ITEM_PERMIT_FEES.wall_remove[q];
+  // Exterior permits
+  if(st.otherItems.includes("roof"))total+=ITEM_PERMIT_FEES.roof[q];
+  if(st.otherItems.includes("siding"))total+=ITEM_PERMIT_FEES.siding[q];
+  if(st.otherItems.includes("windows_all"))total+=ITEM_PERMIT_FEES.windows_bulk[q];
+  if(st.otherItems.includes("deck"))total+=ITEM_PERMIT_FEES.deck[q];
+  if(st.otherItems.includes("plumbing_main"))total+=ITEM_PERMIT_FEES.plumbing[q];
+  if(st.otherItems.includes("lawn"))total+=ITEM_PERMIT_FEES.lawn[q];
+  // Apply location multiplier (permit fees vary by city)
+  return Math.round(total*mx);
+}
+
+function getLoc(addr){
+  if(!addr||addr.trim().length<4)return{mx:1.0,label:"National Average",tier:"avg"};
+  const a=addr.toLowerCase();
+  for(const[c,mx] of Object.entries(CITY_MX)){if(a.includes(c)){const p=Math.round((mx-1)*100);return{mx,label:`${c.replace(/\b\w/g,x=>x.toUpperCase())} (${p>=0?"+":""}${p}% vs avg)`,tier:p>35?"high":p>10?"mid":p<-5?"low":"avg"};}}
+  const parts=addr.split(/[\s,]+/);
+  for(let i=parts.length-1;i>=0;i--){const p=parts[i].trim().toUpperCase();if(STATE_MX[p]){const mx=STATE_MX[p];const pc=Math.round((mx-1)*100);return{mx,label:`${p} state (${pc>=0?"+":""}${pc}% vs avg)`,tier:pc>35?"high":pc>10?"mid":pc<-5?"low":"avg"};}}
+  return{mx:1.0,label:"National Average",tier:"avg"};
+}
+
+// ── COST DATA ──────────────────────────────────────────────────────────────────
+const ROOM_DEFS=[
+  {key:"bedroom",label:"Bedroom",icon:"🛏️",defaultSqft:150,qty:0,open:false,items:[
+    {key:"paint",label:"Painting (walls & ceiling)",ppsf:{b:0.75,a:1.5,l:3},costs:{b:200,a:400,l:900},scaled:true},
+    {key:"floor_carpet",label:"Flooring — Carpet",ppsf:{b:3,a:5.5,l:10},costs:{b:450,a:825,l:1500},scaled:true},
+    {key:"floor_hwood",label:"Flooring — Hardwood (new)",ppsf:{b:8,a:13,l:22},costs:{b:1200,a:1950,l:3300},scaled:true},
+    {key:"floor_refin",label:"Flooring — Hardwood Refinish",ppsf:{b:2.5,a:4.5,l:7},costs:{b:375,a:675,l:1050},scaled:true},
+    {key:"floor_lvp",label:"Flooring — Luxury Vinyl (LVP)",ppsf:{b:4,a:7,l:12},costs:{b:600,a:1050,l:1800},scaled:true},
+    {key:"floor_lam",label:"Flooring — Laminate",ppsf:{b:3,a:5.5,l:9},costs:{b:450,a:825,l:1350},scaled:true},
+    {key:"trim",label:"Trim & Baseboards",costs:{b:200,a:450,l:1100},scaled:false},
+    {key:"crown",label:"Crown Molding",costs:{b:300,a:600,l:1500},scaled:false},
+    {key:"closet",label:"Closet Buildout / Organizer",costs:{b:500,a:1500,l:5000},scaled:false},
+    {key:"lighting",label:"Lighting Fixture Upgrade",costs:{b:150,a:350,l:900},scaled:false},
+    {key:"electrical",label:"Electrical (outlets/switches)",costs:{b:200,a:450,l:1200},scaled:false},
+    {key:"drywall",label:"Drywall Repair / Skim Coat",costs:{b:300,a:700,l:1800},scaled:false},
+    {key:"window",label:"Window Replacement (per unit)",costs:{b:350,a:650,l:1400},scaled:false},
+    {key:"door",label:"Interior Door Replacement",costs:{b:250,a:500,l:1000},scaled:false},
+  ]},
+  {key:"kitchen",label:"Kitchen",icon:"🍳",defaultSqft:200,qty:0,open:false,items:[
+    {key:"cabinets",label:"Cabinets — Stock",costs:{b:3000,a:7000,l:20000},scaled:false},
+    {key:"cab_semi",label:"Cabinets — Semi-Custom",costs:{b:5000,a:12000,l:35000},scaled:false},
+    {key:"cab_reface",label:"Cabinet Refacing",costs:{b:1500,a:4000,l:9000},scaled:false},
+    {key:"countertop_lam",label:"Countertops — Laminate",costs:{b:800,a:800,l:800},scaled:false},
+    {key:"countertop_gq",label:"Countertops — Granite / Quartz",ppsf:{b:45,a:75,l:130},costs:{b:1500,a:2500,l:4500},scaled:true},
+    {key:"backsplash",label:"Backsplash Tile",costs:{b:400,a:1000,l:3000},scaled:false},
+    {key:"sink",label:"Sink & Faucet",costs:{b:300,a:700,l:2000},scaled:false},
+    {key:"floor_tile",label:"Flooring — Tile",ppsf:{b:6,a:11,l:20},costs:{b:900,a:1650,l:3000},scaled:true},
+    {key:"floor_lvp",label:"Flooring — Hardwood / LVP",ppsf:{b:5,a:10,l:18},costs:{b:750,a:1500,l:2700},scaled:true},
+    {key:"paint",label:"Painting",ppsf:{b:0.75,a:1.5,l:3},costs:{b:200,a:400,l:800},scaled:true},
+    {key:"lighting",label:"Lighting / Under-cabinet",costs:{b:400,a:900,l:3000},scaled:false},
+    {key:"electrical",label:"Electrical Upgrade",costs:{b:600,a:1500,l:4000},scaled:false},
+    {key:"plumbing",label:"Plumbing Rough-in",costs:{b:800,a:2000,l:5000},scaled:false},
+    {key:"island",label:"Kitchen Island",costs:{b:1500,a:4000,l:12000},scaled:false},
+    {key:"demo",label:"Demo / Haul Away",costs:{b:400,a:800,l:1500},scaled:false},
+  ]},
+  {key:"living",label:"Living / Family Room",icon:"🛋️",defaultSqft:300,qty:0,open:false,items:[
+    {key:"paint",label:"Painting (walls & ceiling)",ppsf:{b:0.75,a:1.5,l:3},costs:{b:300,a:600,l:1200},scaled:true},
+    {key:"floor_hwood",label:"Flooring — Hardwood",ppsf:{b:8,a:13,l:22},costs:{b:2400,a:3900,l:6600},scaled:true},
+    {key:"floor_carpet",label:"Flooring — Carpet",ppsf:{b:3,a:5.5,l:10},costs:{b:900,a:1650,l:3000},scaled:true},
+    {key:"floor_refin",label:"Flooring — Hardwood Refinish",ppsf:{b:2.5,a:4.5,l:7},costs:{b:750,a:1350,l:2100},scaled:true},
+    {key:"floor_lvp",label:"Flooring — LVP",ppsf:{b:4,a:7,l:12},costs:{b:1200,a:2100,l:3600},scaled:true},
+    {key:"trim",label:"Trim, Crown & Baseboards",costs:{b:400,a:900,l:2500},scaled:false},
+    {key:"fireplace",label:"Fireplace Surround / Refacing",costs:{b:800,a:2500,l:8000},scaled:false},
+    {key:"lighting",label:"Lighting & Recessed Cans",costs:{b:400,a:900,l:3000},scaled:false},
+    {key:"drywall",label:"Drywall / Ceiling Repair",costs:{b:300,a:800,l:2000},scaled:false},
+    {key:"window",label:"Window Replacement (per unit)",costs:{b:350,a:650,l:1400},scaled:false},
+    {key:"builtin",label:"Built-in Shelving / Entertainment",costs:{b:1200,a:3500,l:10000},scaled:false},
+    {key:"door",label:"Interior / French Door",costs:{b:400,a:900,l:2500},scaled:false},
+  ]},
+  {key:"dining",label:"Dining Room",icon:"🍽️",defaultSqft:150,qty:0,open:false,items:[
+    {key:"paint",label:"Painting",ppsf:{b:0.75,a:1.5,l:3},costs:{b:200,a:400,l:800},scaled:true},
+    {key:"floor_hwood",label:"Flooring — Hardwood",ppsf:{b:8,a:13,l:22},costs:{b:1200,a:1950,l:3300},scaled:true},
+    {key:"floor_refin",label:"Flooring — Hardwood Refinish",ppsf:{b:2.5,a:4.5,l:7},costs:{b:375,a:675,l:1050},scaled:true},
+    {key:"floor_carpet",label:"Flooring — Carpet",ppsf:{b:3,a:5.5,l:10},costs:{b:450,a:825,l:1500},scaled:true},
+    {key:"trim",label:"Trim & Wainscoting",costs:{b:500,a:1200,l:3500},scaled:false},
+    {key:"lighting",label:"Chandelier / Lighting",costs:{b:300,a:800,l:3000},scaled:false},
+    {key:"drywall",label:"Drywall Repair",costs:{b:200,a:500,l:1500},scaled:false},
+    {key:"window",label:"Window Replacement (per unit)",costs:{b:350,a:650,l:1400},scaled:false},
+  ]},
+  {key:"office",label:"Home Office",icon:"💼",defaultSqft:120,qty:0,open:false,items:[
+    {key:"paint",label:"Painting",ppsf:{b:0.75,a:1.5,l:3},costs:{b:150,a:300,l:700},scaled:true},
+    {key:"floor_carpet",label:"Flooring — Carpet",ppsf:{b:3,a:5.5,l:10},costs:{b:360,a:660,l:1200},scaled:true},
+    {key:"floor_lvp",label:"Flooring — Hardwood / LVP",ppsf:{b:5,a:9,l:16},costs:{b:600,a:1080,l:1920},scaled:true},
+    {key:"builtin",label:"Built-in Desk & Shelving",costs:{b:1200,a:3500,l:10000},scaled:false},
+    {key:"electrical",label:"Electrical / USB / Data Outlets",costs:{b:300,a:700,l:2000},scaled:false},
+    {key:"lighting",label:"Lighting Upgrade",costs:{b:150,a:350,l:900},scaled:false},
+    {key:"trim",label:"Trim & Molding",costs:{b:200,a:450,l:1100},scaled:false},
+    {key:"door",label:"Interior Door Replacement",costs:{b:250,a:500,l:1000},scaled:false},
+  ]},
+  {key:"basement",label:"Basement",icon:"🏚️",defaultSqft:600,qty:0,open:false,items:[
+    {key:"framing",label:"Framing & Insulation",ppsf:{b:4,a:8,l:18},costs:{b:2400,a:4800,l:10800},scaled:true},
+    {key:"drywall",label:"Drywall & Finishing",ppsf:{b:2.5,a:5,l:11},costs:{b:1500,a:3000,l:6600},scaled:true},
+    {key:"floor_lvp",label:"Flooring — LVP / Vinyl",ppsf:{b:4,a:7,l:12},costs:{b:2400,a:4200,l:7200},scaled:true},
+    {key:"floor_carpet",label:"Flooring — Carpet",ppsf:{b:3,a:5,l:9},costs:{b:1800,a:3000,l:5400},scaled:true},
+    {key:"paint",label:"Painting",ppsf:{b:0.6,a:1.2,l:2.5},costs:{b:360,a:720,l:1500},scaled:true},
+    {key:"lighting",label:"Lighting",costs:{b:600,a:1500,l:4000},scaled:false},
+    {key:"electrical",label:"Electrical Panel / Circuits",costs:{b:1200,a:3000,l:7000},scaled:false},
+    {key:"egress",label:"Egress Window",costs:{b:2000,a:4500,l:9000},scaled:false},
+    {key:"waterproof",label:"Waterproofing / Sump Pump",costs:{b:2500,a:6000,l:14000},scaled:false},
+    {key:"bath_roughin",label:"Add Bathroom (rough-in)",costs:{b:4000,a:10000,l:25000},scaled:false},
+    {key:"bar",label:"Wet Bar",costs:{b:2000,a:5000,l:15000},scaled:false},
+  ]},
+  {key:"garage",label:"Garage",icon:"🚗",defaultSqft:400,qty:0,open:false,items:[
+    {key:"floor_epoxy",label:"Epoxy Floor Coating",ppsf:{b:2,a:4,l:8},costs:{b:800,a:1600,l:3200},scaled:true},
+    {key:"drywall",label:"Drywall & Insulation",ppsf:{b:2,a:4,l:8},costs:{b:800,a:1600,l:3200},scaled:true},
+    {key:"door_gar",label:"Garage Door Replacement",costs:{b:800,a:1800,l:5000},scaled:false},
+    {key:"door_entry",label:"Entry Door to Home",costs:{b:400,a:800,l:2000},scaled:false},
+    {key:"electrical",label:"Electrical (outlets, lighting)",costs:{b:600,a:1500,l:4000},scaled:false},
+    {key:"storage",label:"Storage & Shelving System",costs:{b:600,a:1800,l:5000},scaled:false},
+    {key:"paint",label:"Painting",ppsf:{b:0.6,a:1.2,l:2.5},costs:{b:240,a:480,l:1000},scaled:true},
+    {key:"mini_split",label:"Mini-Split / HVAC Unit",costs:{b:1500,a:3500,l:7000},scaled:false},
+  ]},
+];
+
+const BATH_DEFS=[
+  {key:"half",label:"Half Bath",icon:"🚽",desc:"Toilet + sink",defaultSqft:25,qty:0,items:[
+    {key:"toilet",label:"Toilet Replacement",costs:{b:250,a:500,l:1500},scaled:false},
+    {key:"vanity",label:"Vanity & Sink",costs:{b:300,a:700,l:2500},scaled:false},
+    {key:"faucet",label:"Faucet Upgrade",costs:{b:100,a:250,l:600},scaled:false},
+    {key:"floor_tile",label:"Flooring — Tile",ppsf:{b:8,a:15,l:30},costs:{b:200,a:375,l:750},scaled:true},
+    {key:"paint",label:"Painting",costs:{b:150,a:300,l:700},scaled:false},
+    {key:"lighting",label:"Lighting & Mirror",costs:{b:200,a:450,l:1500},scaled:false},
+    {key:"plumbing",label:"Plumbing Rough-in",costs:{b:600,a:1500,l:4000},scaled:false},
+    {key:"wainscot",label:"Wainscoting / Tile Accent",costs:{b:300,a:700,l:2000},scaled:false},
+  ]},
+  {key:"full",label:"Full Bathroom",icon:"🛁",desc:"Tub/shower + toilet + sink",defaultSqft:50,qty:0,items:[
+    {key:"toilet",label:"Toilet Replacement",costs:{b:250,a:550,l:1500},scaled:false},
+    {key:"vanity",label:"Vanity & Sink",costs:{b:400,a:1000,l:4000},scaled:false},
+    {key:"tub_basic",label:"Tub / Shower — Alcove Unit",costs:{b:500,a:1200,l:3000},scaled:false},
+    {key:"tub_tile",label:"Tub / Shower — Tile Surround",costs:{b:800,a:2000,l:6000},scaled:false},
+    {key:"floor_tile",label:"Flooring — Tile",ppsf:{b:8,a:15,l:30},costs:{b:400,a:750,l:1500},scaled:true},
+    {key:"paint",label:"Painting",costs:{b:150,a:350,l:800},scaled:false},
+    {key:"lighting",label:"Lighting, Mirror & Exhaust Fan",costs:{b:300,a:700,l:2500},scaled:false},
+    {key:"plumbing",label:"Plumbing Rough-in / Upgrade",costs:{b:1000,a:2500,l:7000},scaled:false},
+    {key:"niche",label:"Shower Niche / Shelf",costs:{b:200,a:500,l:1500},scaled:false},
+    {key:"heat_floor",label:"Heated Floor",ppsf:{b:7,a:13,l:25},costs:{b:350,a:650,l:1250},scaled:true},
+    {key:"towel_bar",label:"Towel Bars & Accessories",costs:{b:100,a:250,l:800},scaled:false},
+  ]},
+  {key:"master",label:"Master Bath",icon:"🏛️",desc:"Double vanity + walk-in shower",defaultSqft:80,qty:0,items:[
+    {key:"toilet",label:"Toilet (comfort height / bidet)",costs:{b:350,a:800,l:3000},scaled:false},
+    {key:"vanity",label:"Double Vanity & Sinks",costs:{b:1200,a:3500,l:12000},scaled:false},
+    {key:"shower",label:"Walk-in Shower — Custom Tile",costs:{b:3000,a:7000,l:20000},scaled:false},
+    {key:"tub",label:"Freestanding Soaking Tub",costs:{b:1200,a:3500,l:10000},scaled:false},
+    {key:"tile_walls",label:"Tile — Walls (full)",costs:{b:1500,a:4000,l:12000},scaled:false},
+    {key:"floor_tile",label:"Flooring — Marble / Tile",ppsf:{b:10,a:22,l:50},costs:{b:800,a:1760,l:4000},scaled:true},
+    {key:"heat_floor",label:"Heated Floor",ppsf:{b:7,a:13,l:25},costs:{b:560,a:1040,l:2000},scaled:true},
+    {key:"paint",label:"Painting",costs:{b:200,a:500,l:1400},scaled:false},
+    {key:"lighting",label:"Lighting, Mirrors & Exhaust",costs:{b:500,a:1500,l:5000},scaled:false},
+    {key:"plumbing",label:"Plumbing Rough-in",costs:{b:2000,a:5000,l:13000},scaled:false},
+    {key:"glass_door",label:"Frameless Glass Shower Door",costs:{b:600,a:1500,l:4000},scaled:false},
+    {key:"niche",label:"Shower Niches & Built-ins",costs:{b:400,a:1000,l:3500},scaled:false},
+  ]},
+];
+
+const SCOPES=[{id:"lawn",label:"Front Lawn",icon:"🌿"},{id:"ext",label:"Exterior",icon:"🏠"},{id:"single",label:"Single Room",icon:"🪟"},{id:"multi",label:"Multi-Room",icon:"🏗️"},{id:"full",label:"Full House",icon:"🏡"}];
+const QUALS=[{id:"basic",label:"Basic / Economy",icon:"💲",desc:"Budget materials, lowest cost",col:"#22c55e"},{id:"average",label:"Standard / Mid-Grade",icon:"💰",desc:"Best value for most projects",col:"#3b82f6"},{id:"luxury",label:"Premium / Luxury",icon:"💎",desc:"High-end finishes throughout",col:"#a855f7"}];
+const OTHER_ITEMS=[{key:"lawn",label:"Front Lawn / Landscaping",costs:{b:3000,a:7000,l:18000}},{key:"driveway",label:"Driveway / Walkway",costs:{b:3500,a:8000,l:20000}},{key:"ext_paint",label:"Exterior Painting",costs:{b:2500,a:5000,l:12000}},{key:"siding",label:"Siding Replacement",costs:{b:6000,a:15000,l:35000}},{key:"roof",label:"Roof Replacement",costs:{b:6000,a:13000,l:30000}},{key:"deck",label:"Deck / Patio",costs:{b:4000,a:12000,l:30000}},{key:"fence",label:"Fence",costs:{b:2000,a:5000,l:15000}},{key:"elec_panel",label:"Electrical Panel Upgrade",costs:{b:2500,a:5000,l:10000}},{key:"plumbing_main",label:"Main Plumbing / Repiping",costs:{b:3500,a:8000,l:20000}},{key:"insulation",label:"Insulation",costs:{b:1500,a:4000,l:10000}},{key:"windows_all",label:"All Windows (whole house)",costs:{b:6000,a:15000,l:40000}}];
+const LAY_ITEMS=["Remove Wall(s)","Move Wall(s)","Open Concept","Change Room Use","Other Layout Change"];
+const LAY_COSTS={"Remove Wall(s)":{b:2500,a:5000,l:10000},"Move Wall(s)":{b:3500,a:7000,l:14000},"Open Concept":{b:7000,a:15000,l:30000},"Change Room Use":{b:4000,a:10000,l:22000},"Other Layout Change":{b:2500,a:6000,l:12000}};
+const APP_ITEMS=["Refrigerator","Range / Oven","Dishwasher","Microwave","Washer","Dryer","Other"];
+const APP_COSTS={Refrigerator:{b:700,a:1500,l:4500},"Range / Oven":{b:500,a:1200,l:5000},Dishwasher:{b:350,a:800,l:2200},Microwave:{b:150,a:400,l:1200},Washer:{b:450,a:900,l:2500},Dryer:{b:400,a:850,l:2300},Other:{b:400,a:1000,l:2500}};
+const HVAC_ITEMS=["New HVAC System","Replace Existing System","Ductwork Modifications","Add / Remove Zones","No HVAC Work"];
+const HVAC_COSTS={"New HVAC System":{b:4500,a:10000,l:22000},"Replace Existing System":{b:3000,a:7000,l:16000},"Ductwork Modifications":{b:1500,a:4000,l:10000},"Add / Remove Zones":{b:1200,a:3500,l:8000},"No HVAC Work":{b:0,a:0,l:0}};
+const LM={b:.35,a:.45,l:.55},EM={b:.08,a:.12,l:.18};
+
+// ── STATE ──────────────────────────────────────────────────────────────────────
+let roomSizes={},bathSizes={};
+let rooms=JSON.parse(JSON.stringify(ROOM_DEFS));
+let baths=JSON.parse(JSON.stringify(BATH_DEFS));
+let checkedItems={};
+let st={
+  step:1,
+  // Project info
+  projectName:"",clientName:"",clientEmail:"",clientPhone:"",
+  contractorName:"",contractorPhone:"",contractorLicense:"",
+  projectNotes:"",
+  // Project
+  addr:"",scope:null,
+  otherItems:[],layout:null,layItems:[],
+  qual:"average",
+  apps:[],hvac:[],
+  mtype:"pct",margin:20,
+  // Extras
+  contingencyPct:10,
+  includeTax:false,taxRate:8,
+  includePermits:true,
+  files:[],
+  customLine:{enabled:false,label:"Custom Item",amount:""},
+  // Price overrides: key -> override amount string
+  priceOverrides:{},
+  // Margin override
+  marginOverride:"",
+  // Lawn details
+  lawnSqft:"",lawnCondition:"enhancement",
+  // HVAC specs (per unit)
+  hvacSpecs:{
+    type:"central_ac",      // central_ac | heat_pump | mini_split | furnace | package_unit
+    tons:2.5,               // 1.5 | 2 | 2.5 | 3 | 3.5 | 4 | 5
+    seer:16,                // 14 | 16 | 18 | 20 | 22
+    brand:"standard",       // standard | carrier | trane | lennox | rheem | goodman
+    ductwork:"existing",    // existing | new | partial
+    units:1,
+  },
+  // Window specs
+  windowSpecs:{
+    type:"double_hung",     // double_hung | casement | sliding | bay | picture | awning
+    size:"standard",        // standard | large | xl
+    glazing:"double",       // single | double | triple
+    frame:"vinyl",          // vinyl | fiberglass | wood | aluminum
+    count:1,
+  },
+  // Roofing specs
+  roofSpecs:{
+    material:"asphalt_3tab",// asphalt_3tab | asphalt_arch | metal | tile | slate | flat_tpo
+    squares:20,             // roof squares (1 square = 100 sqft)
+    layers:1,               // layers to remove
+    pitch:"standard",       // low | standard | steep
+  },
+  // Countertop specs
+  counterSpecs:{
+    material:"granite",     // laminate | granite | quartz | marble | butcher | concrete
+    linearFt:20,
+    edgeProfile:"standard", // standard | ogee | waterfall
+  },
+  // Electrical specs
+  electricalSpecs:{
+    panelAmps:0,            // 0=no upgrade | 100 | 150 | 200 | 400
+    circuits:0,             // additional circuits
+    evCharger:false,
+    generatorHookup:false,
+  },
+  // Meta
+  estimateNum:"",createdDate:"",
+  parsedSpecSummary:[],
+};
+
+// Generate estimate number
+function genEstNum(){
+  const d=new Date();
+  return `EST-${d.getFullYear()}${String(d.getMonth()+1).padStart(2,"0")}${String(d.getDate()).padStart(2,"0")}-${Math.floor(Math.random()*9000)+1000}`;
+}
+st.estimateNum=genEstNum();
+st.createdDate=new Date().toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"});
+
+function fmt(n){return Math.round(n).toLocaleString("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0})}
+function qk(){return st.qual==="basic"?"b":st.qual==="luxury"?"l":"a"}
+function ciKey(rk,inst,ik){return`${rk}_${inst}_${ik}`}
+function bathKey(bk,inst,ik){return`bath_${bk}_${inst}_${ik}`}
+function szKey(k,inst){return`${k}_${inst}`}
+
+function getItemCost(item,sqft,defSqft,mx,overrideKey){
+  // Contractor override takes priority
+  if(overrideKey&&st.priceOverrides[overrideKey]!==undefined&&st.priceOverrides[overrideKey]!==""){
+    return Math.round(parseFloat(st.priceOverrides[overrideKey])||0);
+  }
+  const q=qk();
+  if(item.scaled&&item.ppsf&&sqft>0)return Math.round(item.ppsf[q]*sqft*mx);
+  if(item.scaled&&sqft>0&&defSqft>0)return Math.round(item.costs[q]*Math.min(Math.max(sqft/defSqft,0.4),3.5)*mx);
+  return Math.round(item.costs[q]*mx);
+}
+function calcRoomTotal(rDef,mx){let t=0;for(let i=0;i<rDef.qty;i++){const sqft=parseFloat(roomSizes[szKey(rDef.key,i)])||0;rDef.items.forEach(item=>{const ck=ciKey(rDef.key,i,item.key);if(checkedItems[ck])t+=getItemCost(item,sqft,rDef.defaultSqft,mx,"or_"+ck);});}return t;}
+function calcBathTotal(bDef,mx){let t=0;for(let i=0;i<bDef.qty;i++){const sqft=parseFloat(bathSizes[szKey(bDef.key,i)])||0;bDef.items.forEach(item=>{const bk=bathKey(bDef.key,i,item.key);if(checkedItems[bk])t+=getItemCost(item,sqft,bDef.defaultSqft,mx,"or_"+bk);});}return t;}
+
+// ── SPEC-BASED PRICING ENGINE ────────────────────────────────────────────────
+
+// HVAC unit cost by type/tons/seer/brand
+function calcHvacSpecCost(mx){
+  if(!st.hvac.length||st.hvac.includes("No HVAC Work"))return 0;
+  const s=st.hvacSpecs;
+  // Base cost per ton by type
+  const BASE_PER_TON={
+    central_ac:{b:600,a:900,l:1400},
+    heat_pump:{b:700,a:1100,l:1800},
+    mini_split:{b:900,a:1400,l:2200},
+    furnace:{b:500,a:800,l:1400},
+    package_unit:{b:800,a:1200,l:1900},
+  };
+  const SEER_MULT={14:1.0,16:1.12,18:1.28,20:1.45,22:1.65};
+  const BRAND_MULT={standard:1.0,goodman:0.9,rheem:1.0,carrier:1.18,trane:1.22,lennox:1.28};
+  const DUCT_ADD={existing:0,partial:1200,new:3500};
+  const q=qk();
+  const baseCostPerTon=(BASE_PER_TON[s.type]||BASE_PER_TON.central_ac)[q];
+  const unitCost=baseCostPerTon*s.tons*(SEER_MULT[s.seer]||1.0)*(BRAND_MULT[s.brand]||1.0);
+  // Labor: ~40% of equipment
+  const laborCost=unitCost*0.45;
+  const ductCost=(DUCT_ADD[s.ductwork]||0)*mx;
+  const perUnit=Math.round((unitCost+laborCost)*mx+ductCost);
+  // Add zones cost if selected
+  const zoneAdd=st.hvac.includes("Add / Remove Zones")?Math.round(1200*mx):0;
+  // Ductwork modifications
+  const ductMod=st.hvac.includes("Ductwork Modifications")?Math.round(2500*mx):0;
+  return (perUnit*(s.units||1))+zoneAdd+ductMod;
+}
+
+// Window cost by type/size/glazing/frame
+function calcWindowSpecCost(count,mx){
+  if(!count||count<1)return 0;
+  const s=st.windowSpecs;
+  const BASE={double_hung:{b:280,a:480,l:900},casement:{b:350,a:600,l:1200},sliding:{b:250,a:420,l:850},bay:{b:900,a:1600,l:3200},picture:{b:300,a:520,l:1000},awning:{b:320,a:550,l:1100}};
+  const SIZE_MULT={standard:1.0,large:1.35,xl:1.7};
+  const GLAZE_MULT={single:0.85,double:1.0,triple:1.3};
+  const FRAME_MULT={vinyl:1.0,aluminum:1.1,fiberglass:1.35,wood:1.6};
+  const q=qk();
+  const base=(BASE[s.type]||BASE.double_hung)[q];
+  const unitCost=Math.round(base*(SIZE_MULT[s.size]||1)*(GLAZE_MULT[s.glazing]||1)*(FRAME_MULT[s.frame]||1)*mx);
+  return unitCost*count;
+}
+
+// Roofing cost by material/squares/layers/pitch
+function calcRoofSpecCost(mx){
+  const s=st.roofSpecs;
+  const BASE_PER_SQ={asphalt_3tab:{b:280,a:380,l:520},asphalt_arch:{b:350,a:480,l:680},metal:{b:650,a:950,l:1600},tile:{b:800,a:1200,l:2200},slate:{b:1200,a:1800,l:3500},flat_tpo:{b:400,a:600,l:950}};
+  const LAYER_ADD={1:0,2:180,3:280};
+  const PITCH_MULT={low:0.9,standard:1.0,steep:1.25};
+  const q=qk();
+  const base=(BASE_PER_SQ[s.material]||BASE_PER_SQ.asphalt_arch)[q];
+  const layerAdd=(LAYER_ADD[s.layers]||0)*mx;
+  const totalPerSq=(base+layerAdd)*(PITCH_MULT[s.pitch]||1.0)*mx;
+  return Math.round(totalPerSq*s.squares);
+}
+
+// Countertop cost by material/linear feet
+function calcCounterSpecCost(mx){
+  const s=st.counterSpecs;
+  const BASE_PER_LF={laminate:{b:28,a:45,l:80},granite:{b:55,a:85,l:140},quartz:{b:60,a:95,l:160},marble:{b:75,a:120,l:220},butcher:{b:45,a:75,l:130},concrete:{b:65,a:110,l:180}};
+  const EDGE_ADD={standard:0,ogee:8,waterfall:350};
+  const q=qk();
+  const base=(BASE_PER_LF[s.material]||BASE_PER_LF.granite)[q];
+  const edgeAdd=(EDGE_ADD[s.edgeProfile]||0)*mx;
+  return Math.round((base*s.linearFt*mx)+edgeAdd);
+}
+
+// Electrical panel/circuit cost
+function calcElecSpecCost(mx){
+  const s=st.electricalSpecs;
+  const q=qk();
+  const PANEL={0:0,100:{b:1200,a:1800,l:3000},150:{b:1600,a:2400,l:4000},200:{b:2000,a:3000,l:5000},400:{b:4000,a:6000,l:10000}};
+  const CIRCUIT_COST={b:180,a:280,l:450};
+  let total=((PANEL[s.panelAmps]||{b:0,a:0,l:0})[q]||0)*mx;
+  total+=s.circuits*(CIRCUIT_COST[q]||0)*mx;
+  if(s.evCharger)total+=Math.round({b:600,a:1000,l:1800}[q]*mx);
+  if(s.generatorHookup)total+=Math.round({b:800,a:1400,l:2500}[q]*mx);
+  return Math.round(total);
+}
+
+function calc(){
+  const q=qk();const loc=getLoc(st.addr);const mx=loc.mx;
+  let rT=0,bT=0,oT=0,appC=0,hvC=0;
+  rooms.forEach(r=>{rT+=calcRoomTotal(r,mx);});
+  baths.forEach(b=>{bT+=calcBathTotal(b,mx);});
+  st.otherItems.forEach(k=>{
+    const orKey="ext_or_"+k;
+    if(st.priceOverrides[orKey]&&st.priceOverrides[orKey]!==""){oT+=parseFloat(st.priceOverrides[orKey])||0;}
+    else if(k==="lawn"){oT+=getLawnCost(mx);}
+    else{const it=OTHER_ITEMS.find(o=>o.key===k);if(it)oT+=it.costs[q]*mx;}
+  });
+  st.layItems.forEach(k=>{if(LAY_COSTS[k])oT+=LAY_COSTS[k][q]*mx;});
+  st.apps.forEach(k=>{
+    const orKey="app_or_"+k;
+    if(st.priceOverrides[orKey]&&st.priceOverrides[orKey]!==""){appC+=parseFloat(st.priceOverrides[orKey])||0;}
+    else if(APP_COSTS[k])appC+=APP_COSTS[k][q]*mx;
+  });
+  // Use spec-based HVAC pricing if HVAC is selected
+  if(st.hvac.length&&!st.hvac.includes("No HVAC Work")){
+    hvC=calcHvacSpecCost(mx);
+  }
+  const base=rT+bT+oT;
+  const lab=Math.round(base*LM[q]);
+  const equ=Math.round(base*EM[q]);
+  const mv=parseFloat(document.getElementById("mv")?.value||st.margin)||0;
+  const mAmt=st.marginOverride&&st.marginOverride!==""
+    ? (parseFloat(st.marginOverride)||0)
+    : (st.mtype==="pct"?(lab+equ)*mv/100:mv);
+  const customC=st.customLine.enabled?(parseFloat(st.customLine.amount)||0):0;
+  // Permit fees — calculated per item selected, not per project scope
+  const permitC=calcPermitFees(mx);
+  // Subtotal before contingency & tax
+  const subtotal=Math.round(base+lab+equ+appC+hvC+customC+mAmt+permitC);
+  // Contingency
+  const contingencyAmt=Math.round(subtotal*(st.contingencyPct/100));
+  // Tax on materials
+  const taxAmt=st.includeTax?Math.round(base*(st.taxRate/100)):0;
+  const tot=subtotal+contingencyAmt+taxAmt;
+  return{base:Math.round(base),rT:Math.round(rT),bT:Math.round(bT),oT:Math.round(oT),lab,equ,apps:Math.round(appC),hvac:Math.round(hvC),custom:Math.round(customC),permit:Math.round(permitC),contingency:contingencyAmt,tax:taxAmt,subtotal,tot,loc};
+}
+
+function recalc(){
+  const c=calc();
+  const he=document.getElementById("header-est");
+  if(c.tot>0){he.style.display="block";document.getElementById("he-val").textContent=fmt(c.tot);document.getElementById("he-num").textContent=st.estimateNum;}
+  else he.style.display="none";
+  const md=document.getElementById("mdisplay");if(md)md.textContent=fmt(c.margin);
+  updateLawnDesc();
+  updateHvacPreview();
+  if(st.step>=9)renderEst(c);
+}
+
+function setStep(n){
+  st.step=n;
+  renderStepper();
+  renderAll();
+  if(n>=9){renderEst(calc());document.getElementById("estimate").style.display="block";}
+  else document.getElementById("estimate").style.display="none";
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+// ── STEPPER ────────────────────────────────────────────────────────────────────
+// Scope-aware step flows — only show relevant steps per scope
+const SCOPE_STEPS={
+  lawn:    [1,2,5,6,8],       // Info→Scope→Other Work→Quality→Costs
+  ext:     [1,2,5,6,7,8],     // Info→Scope→Other Work→Quality→HVAC→Costs
+  single:  [1,2,3,4,5,6,7,8], // All steps
+  multi:   [1,2,3,4,5,6,7,8], // All steps
+  full:    [1,2,3,4,5,6,7,8], // All steps
+};
+const STEP_TITLES={
+  1:"Project Info",2:"Scope",3:"Rooms",4:"Bathrooms",
+  5:"Other Work",6:"Quality",7:"HVAC & Appliances",8:"Costs"
+};
+function getActiveSteps(){return SCOPE_STEPS[st.scope]||[1,2,3,4,5,6,7,8];}
+function getNextRealStep(cur){
+  const s=getActiveSteps();const i=s.indexOf(cur);
+  return(i===-1||i>=s.length-1)?9:s[i+1];
+}
+const STEP_LABELS=["Project Info","Scope","Rooms","Bathrooms","Other Work","Quality","Appliances & HVAC","Costs & Settings","Estimate"];
+function renderStepper(){
+  const wrap=document.getElementById("stepper");wrap.innerHTML="";
+  const activeSteps=getActiveSteps();
+  const allSteps=[...activeSteps,9]; // add estimate as last
+  const curIdx=activeSteps.indexOf(st.step);
+  allSteps.forEach((realStep,posIdx)=>{
+    const isEst=realStep===9;
+    const active=realStep===st.step||(isEst&&st.step===9);
+    const done=isEst?(st.step===9&&false):(posIdx<=curIdx&&!active);
+    const realDone=!isEst&&activeSteps.indexOf(realStep)<curIdx;
+    const dot=document.createElement("div");
+    dot.className="step-dot"+(active?" active":realDone?" done":"");
+    dot.textContent=realDone?"✓":(posIdx+1);
+    dot.title=isEst?"Estimate":(STEP_TITLES[realStep]||"");
+    if(realDone)dot.onclick=()=>setStep(realStep);
+    const lbl=document.createElement("div");lbl.className="step-label";
+    lbl.textContent=isEst?"Estimate":(STEP_TITLES[realStep]||"");
+    const item=document.createElement("div");item.className="step-item";
+    item.appendChild(dot);item.appendChild(lbl);
+    wrap.appendChild(item);
+    if(posIdx<allSteps.length-1){
+      const line=document.createElement("div");
+      line.className="step-line"+(realDone?" done":"");
+      wrap.appendChild(line);
+    }
+  });
+}
+
+// ── RENDER ALL SECTIONS ────────────────────────────────────────────────────────
+function renderAll(){
+  const wrap=document.getElementById("sections");wrap.innerHTML="";
+  const titles=["Project & Client Info","Project Scope","Rooms — Size & Work Items","Bathrooms — Size & Work Items","Other Work & Layout Changes","Material Quality Level","Appliances & HVAC","Costs, Margin & Settings"];
+  const subs=["Name, address, contact details and notes","Type of renovation project","Add rooms, enter sq ft, check only work needed","Add bathrooms, enter sq ft, select work items","Exterior, structural and system work","Applies to all labor and materials","Select appliances and HVAC work","Markup, contingency, permits and tax"];
+  const STEP_META={
+    1:["Project & Client Info","City & state auto-adjusts pricing"],
+    2:["Project Scope","Choose the type of renovation"],
+    3:["Rooms — Size & Work Items","Add rooms, enter sq ft, check only work needed"],
+    4:["Bathrooms — Size & Work Items","Add bathrooms, enter sq ft, select work items"],
+    5:["Other Work & Layout","Exterior, lawn, structural and systems"],
+    6:["Material Quality","Applies to all selected items"],
+    7:["Appliances & HVAC","Select appliances and HVAC specifications"],
+    8:["Costs & Settings","Margin, contingency, permits and tax"],
+  };
+  const activeSteps=getActiveSteps();
+  const currentPos=activeSteps.indexOf(st.step);
+  activeSteps.forEach((realStep,posIdx)=>{
+    if(posIdx>currentPos)return; // don't show future steps
+    const open=realStep===st.step;
+    const done=posIdx<currentPos;
+    const sec=document.createElement("div");sec.className="card"+(open?" active":done?" done":"");
+    const hdr=document.createElement("div");hdr.className="card-hdr";
+    if(done)hdr.onclick=()=>setStep(realStep);
+    const badge=document.createElement("div");badge.className="step-badge";badge.textContent=done?"✓":(posIdx+1);
+    const info=document.createElement("div");info.style.flex="1";
+    const[t,s]=STEP_META[realStep]||["Step "+realStep,""];
+    info.innerHTML=`<div class="card-title">${t}</div><div class="card-sub">${s}</div>`;
+    hdr.appendChild(badge);hdr.appendChild(info);
+    if(done){const e=document.createElement("span");e.className="edit-tag";e.textContent="✎ Edit";hdr.appendChild(e);}
+    sec.appendChild(hdr);
+    if(open){const body=document.createElement("div");body.className="card-body";body.appendChild(buildStep(realStep));sec.appendChild(body);}
+    wrap.appendChild(sec);
+  });
+}
+
+// ── BUILD EACH STEP ────────────────────────────────────────────────────────────
+function buildStep(i){
+  const d=document.createElement("div");
+  const loc=getLoc(st.addr);const mx=loc.mx;
+
+  // ── STEP 1: PROJECT INFO ──
+  if(i===1){
+    d.innerHTML=`
+    <div class="info-bar">ℹ️ Fill in as much or as little as needed — only the address is required for pricing</div>
+    <div class="sec-lbl">Project Details</div>
+    <div class="form-row" style="margin-bottom:10px">
+      <div class="field"><div class="field-label">Project Name <span class="tip" title="e.g. Smith Kitchen Reno">?</span></div><input type="text" placeholder="e.g. Master Bath Renovation" value="${st.projectName}" oninput="st.projectName=this.value"/></div>
+      <div class="field"><div class="field-label">Property Address <span class="tip" title="City & state auto-adjust pricing">?</span></div><input type="text" id="addr-inp" placeholder="123 Main St, City, State ZIP" value="${st.addr}" oninput="handleAddr(this.value)"/></div>
+    </div>
+    <div id="loc-wrap" style="margin-bottom:12px">${locHtml(st.addr,loc)}</div>
+    <div class="divider"></div>
+    <div class="sec-lbl">Client Information</div>
+    <div class="form-row" style="margin-bottom:10px">
+      <div class="field"><div class="field-label">Client Name</div><input type="text" placeholder="Full name" value="${st.clientName}" oninput="st.clientName=this.value"/></div>
+      <div class="field"><div class="field-label">Client Email</div><input type="email" placeholder="email@example.com" value="${st.clientEmail}" oninput="st.clientEmail=this.value"/></div>
+    </div>
+    <div class="form-row" style="margin-bottom:12px">
+      <div class="field"><div class="field-label">Client Phone</div><input type="text" placeholder="(555) 000-0000" value="${st.clientPhone}" oninput="st.clientPhone=this.value"/></div>
+    </div>
+    <div class="divider"></div>
+    <div class="sec-lbl">Contractor / Company (optional)</div>
+    <div class="form-row3" style="margin-bottom:12px">
+      <div class="field"><div class="field-label">Company / Contractor Name</div><input type="text" placeholder="Your company name" value="${st.contractorName}" oninput="st.contractorName=this.value"/></div>
+      <div class="field"><div class="field-label">Phone</div><input type="text" placeholder="(555) 000-0000" value="${st.contractorPhone}" oninput="st.contractorPhone=this.value"/></div>
+      <div class="field"><div class="field-label">License #</div><input type="text" placeholder="Contractor license" value="${st.contractorLicense}" oninput="st.contractorLicense=this.value"/></div>
+    </div>
+    <div class="divider"></div>
+    <div class="sec-lbl">Project Notes / Special Instructions</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;flex-wrap:wrap;gap:8px">
+      <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--faint)">Project Notes / Special Instructions</div>
+      <button class="voice-btn" id="voice-btn" onclick="toggleVoice()" title="Tap to dictate notes">
+        <div class="voice-dot" id="voice-dot"></div>
+        <span id="voice-label">🎤 Speak Notes</span>
+      </button>
+    </div>
+    <div class="voice-transcript" id="voice-transcript">🎤 Listening... speak your project details</div>
+    <textarea id="notes-ta" placeholder="Type or tap 🎤 to speak your project notes&#10;&#10;Example: 1700 sqft driveway mill and asphalt overlay, 2 Carrier 3.5 ton 16 SEER AC units replace existing, 3 bedrooms paint and LVP flooring...&#10;&#10;Example: 3 Carrier 3.5 ton 16 SEER AC units, replace existing ductwork, 15 double-hung vinyl windows, 30 squares architectural shingle roof..." oninput="st.projectNotes=this.value" rows="5">${st.projectNotes}</textarea>
+    <div style="margin-top:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <button class="btn btn-primary" onclick="parseNotesWithAI()" id="parse-btn" style="background:linear-gradient(135deg,#6366f1,#8b5cf6)">
+        🤖 Extract from Notes
+      </button>
+      <button class="btn-voice" id="voice-btn" onclick="toggleVoice()" title="Tap to speak your notes">
+        🎤
+      </button>
+      <span style="font-size:11px;color:var(--dim)" id="voice-status">AI reads your notes and auto-fills specs</span>
+    </div>
+    <div id="parse-result" style="display:none;margin-top:10px;padding:10px 14px;border-radius:8px;font-size:12px;line-height:1.7;border:0.5px solid var(--border)"></div>
+    <div style="margin-top:14px"><button class="btn btn-primary" onclick="setStep(2)">Next: Project Scope →</button></div>`;
+    return d;
+  }
+
+  // ── STEP 2: SCOPE ──
+  if(i===2){
+    const g=document.createElement("div");g.className="scope-grid";g.style.marginBottom="14px";
+    SCOPES.forEach(s=>{const b=document.createElement("button");b.className="scope-btn"+(st.scope===s.id?" on":"");b.innerHTML=`<span class="scope-icon">${s.icon}</span><span class="scope-lbl">${s.label}</span>`;b.onclick=()=>{
+  const prev=st.scope;
+  st.scope=s.id;
+  // Clear data irrelevant to new scope
+  if(s.id==="lawn"||s.id==="ext"){
+    if(prev!==s.id){rooms.forEach(r=>{r.qty=0;r.open=false;});baths.forEach(b=>b.qty=0);}
+    if(s.id==="lawn"){st.hvac=[];st.apps=[];}
+  }
+  // Navigate to first step after scope in this scope's flow
+  const steps=SCOPE_STEPS[s.id]||[1,2,3,4,5,6,7,8];
+  setStep(steps[2]); // index 0=info, 1=scope, 2=first real step
+};g.appendChild(b);});
+    d.appendChild(g);
+    return d;
+  }
+
+  // ── STEP 3: ROOMS ──
+  if(i===3){
+    const lbl=document.createElement("div");lbl.className="sec-lbl";lbl.textContent="Click + to add rooms · enter sq ft · check only work needed";d.appendChild(lbl);
+    rooms.forEach(rDef=>d.appendChild(buildRoomBlock(rDef,mx)));
+    const btn=document.createElement("button");btn.className="btn btn-primary";btn.style.marginTop="14px";btn.textContent=`Next: ${STEP_TITLES[getNextRealStep(3)]||"Estimate"} →`;btn.onclick=()=>setStep(getNextRealStep(3));d.appendChild(btn);
+    return d;
+  }
+
+  // ── STEP 4: BATHROOMS ──
+  if(i===4){
+    const lbl=document.createElement("div");lbl.className="sec-lbl";lbl.textContent="Click + to add bathrooms · enter sq ft · check work items";d.appendChild(lbl);
+    baths.forEach(bDef=>d.appendChild(buildBathBlock(bDef,mx)));
+    const btn=document.createElement("button");btn.className="btn btn-primary";btn.style.marginTop="14px";btn.textContent=`Next: ${STEP_TITLES[getNextRealStep(4)]||"Estimate"} →`;btn.onclick=()=>setStep(getNextRealStep(4));d.appendChild(btn);
+    return d;
+  }
+
+  // ── STEP 5: OTHER WORK ──
+  if(i===5){
+    const lbl1=document.createElement("div");lbl1.className="sec-lbl";lbl1.textContent="Other areas & exterior work";d.appendChild(lbl1);
+    const g=document.createElement("div");g.className="chk-grid";
+    OTHER_ITEMS.forEach(it=>{
+      const orKey="ext_or_"+it.key;
+      const checked=st.otherItems.includes(it.key);
+      const orVal=st.priceOverrides[orKey]||"";
+      const q=qk();const loc=getLoc(st.addr);
+      const baseCost=it.costs?Math.round(it.costs[q]*loc.mx):0;
+      const ci=document.createElement("div");
+      ci.style.cssText="margin-bottom:6px;padding:8px 10px;border-radius:8px;border:0.5px solid var(--border);background:var(--surface);cursor:pointer;transition:border-color .15s";
+      if(checked)ci.style.borderColor="var(--amber)";
+      const rowDiv=document.createElement("div");
+      rowDiv.style.cssText="display:flex;align-items:center;gap:8px";
+      rowDiv.innerHTML=`<div class="cbox" style="${checked?"background:var(--amber);border-color:var(--amber)":""}"><span class="ctick" style="${checked?"display:block":""}">✓</span></div><span style="font-size:12px;color:${checked?"var(--text)":"var(--muted)"};flex:1">${it.label}</span><span style="font-size:11px;color:${orVal?"var(--orange)":"var(--faint)"}">${baseCost>0?(orVal?fmt(parseFloat(orVal)):fmt(baseCost)):""}</span>`;
+      ci.appendChild(rowDiv);
+      if(checked){
+        const ovWrap=document.createElement("div");
+        ovWrap.style.cssText="margin-top:5px;padding-left:24px;display:flex;align-items:center;gap:6px";
+        const inp=document.createElement("input");
+        inp.type="number";inp.className="price-override-inp";inp.placeholder="Override price $";inp.value=orVal;
+        inp.style.cssText=`width:140px;padding:5px 9px;font-size:12px;border-radius:7px;background:var(--input-bg);border:1.5px solid ${orVal?"var(--orange)":"var(--border2)"};color:var(--text);outline:none;-webkit-appearance:none`;
+        const hint=document.createElement("span");hint.style.cssText=`font-size:10px;color:${orVal?"var(--orange)":"var(--faint)"};font-weight:${orVal?"700":"400"}`;hint.textContent=orVal?"★ OVERRIDDEN":"optional override";
+        inp.addEventListener("click",e=>e.stopPropagation());
+        inp.addEventListener("input",function(){st.priceOverrides[orKey]=this.value;this.style.borderColor=this.value?"var(--orange)":"var(--border2)";hint.textContent=this.value?"★ OVERRIDDEN":"optional override";hint.style.color=this.value?"var(--orange)":"var(--faint)";recalc();});
+        ovWrap.appendChild(inp);ovWrap.appendChild(hint);ci.appendChild(ovWrap);
+      }
+      rowDiv.onclick=(e)=>{
+        if(e.target.tagName==="INPUT")return;
+        const inItems=st.otherItems.includes(it.key);
+        if(inItems)st.otherItems.splice(st.otherItems.indexOf(it.key),1);else st.otherItems.push(it.key);
+        recalc();renderAll();
+      };
+      g.appendChild(ci);
+    });
+    d.appendChild(g);
+    // Lawn detail panel
+    if(st.otherItems.includes("lawn")){
+      const lawnPanel=document.createElement("div");
+      lawnPanel.style.cssText="background:rgba(34,197,94,.06);border:0.5px solid rgba(34,197,94,.25);border-radius:10px;padding:14px;margin-bottom:12px";
+      lawnPanel.innerHTML=`
+        <div class="sec-lbl" style="color:var(--green);margin-bottom:10px">🌿 Lawn / Landscaping Details</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+          <div>
+            <div class="field-label">Total Area (sq ft)</div>
+            <input type="number" placeholder="e.g. 2500" value="${st.lawnSqft}" style="padding:8px 10px;font-size:13px" oninput="st.lawnSqft=this.value;recalc()"/>
+          </div>
+          <div>
+            <div class="field-label">Scope of Work</div>
+            <select style="padding:8px 10px;font-size:13px" onchange="st.lawnCondition=this.value;recalc()">
+              <option value="touchup" ${st.lawnCondition==="touchup"?"selected":""}>Touch-Up & Routine Maintenance</option>
+              <option value="enhancement" ${st.lawnCondition==="enhancement"?"selected":""}>Enhancement & Refresh</option>
+              <option value="new" ${st.lawnCondition==="new"?"selected":""}>New Installation</option>
+              <option value="major" ${st.lawnCondition==="major"?"selected":""}>Restoration & Major Renovation</option>
+            </select>
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--muted);line-height:1.6" id="lawn-scope-desc"></div>
+        <div style="margin-top:8px;font-size:12px;color:var(--amber)" id="lawn-cost-display"></div>`;
+      d.appendChild(lawnPanel);
+      // Update scope description
+      setTimeout(()=>{updateLawnDesc();},10);
+    }
+    const div1=document.createElement("div");div1.className="divider";d.appendChild(div1);
+    const lbl2=document.createElement("div");lbl2.className="sec-lbl";lbl2.textContent="Layout changes?";d.appendChild(lbl2);
+    const yn=document.createElement("div");yn.className="yn-row";
+    ["Yes","No"].forEach(v=>{const b=document.createElement("button");b.className="yn-btn"+(st.layout===(v==="Yes")?" on":"");b.textContent=v;b.onclick=()=>{st.layout=v==="Yes";if(!st.layout){st.layItems=[];recalc();}renderAll();};yn.appendChild(b);});
+    d.appendChild(yn);
+    if(st.layout===true){const lg=document.createElement("div");lg.className="chk-grid";LAY_ITEMS.forEach(k=>{const ci=document.createElement("div");ci.className="ci"+(st.layItems.includes(k)?" on":"");ci.innerHTML=`<div class="cbox"><span class="ctick">✓</span></div><span class="clbl">${k}</span>`;ci.onclick=()=>{const idx=st.layItems.indexOf(k);if(idx>-1)st.layItems.splice(idx,1);else st.layItems.push(k);ci.classList.toggle("on",st.layItems.includes(k));recalc();};lg.appendChild(ci);});d.appendChild(lg);}
+    const btn=document.createElement("button");btn.className="btn btn-primary";btn.style.marginTop="12px";btn.textContent=`Next: ${STEP_TITLES[getNextRealStep(5)]||"Estimate"} →`;btn.onclick=()=>setStep(getNextRealStep(5));d.appendChild(btn);
+    return d;
+  }
+
+  // ── STEP 6: QUALITY ──
+  if(i===6){
+    const g=document.createElement("div");g.className="q-grid";
+    QUALS.forEach(q=>{const b=document.createElement("button");b.className="q-btn";if(st.qual===q.id){b.style.borderColor=q.col;b.style.background=q.col+"15";}b.innerHTML=`<span class="q-icon">${q.icon}</span><span class="q-name" style="color:${st.qual===q.id?q.col:"var(--muted)"}">${q.label}</span><span class="q-desc">${q.desc}</span>`;b.onclick=()=>{st.qual=q.id;recalc();renderAll();};g.appendChild(b);});
+    const n6=getNextRealStep(6);
+    const btn=document.createElement("button");btn.className="btn btn-primary";
+    btn.textContent=`Next: ${STEP_TITLES[n6]||"Estimate"} →`;btn.onclick=()=>setStep(n6);
+    d.appendChild(g);d.appendChild(btn);
+    return d;
+  }
+
+  // ── STEP 7: APPLIANCES & HVAC ──
+  if(i===7){
+    // Show parsed spec banner if notes were analyzed
+    if(st.parsedSpecSummary&&st.parsedSpecSummary.length>0){
+      const specBanner=document.createElement("div");
+      specBanner.style.cssText="background:rgba(99,102,241,.08);border:1px solid rgba(99,102,241,.25);border-radius:10px;padding:12px 14px;margin-bottom:14px";
+      specBanner.innerHTML=`
+        <div style="font-size:11px;font-weight:700;color:#6366f1;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em">🤖 AI-Extracted Specs Applied to This Estimate</div>
+        ${st.parsedSpecSummary.map(s=>`<div style="font-size:12px;color:var(--text);padding:2px 0;display:flex;gap:6px"><span style="color:var(--amber)">▸</span>${s}</div>`).join("")}
+        <div style="font-size:10px;color:var(--faint);margin-top:8px">Specs extracted from your project notes. Adjust below if needed.</div>`;
+      d.appendChild(specBanner);
+    }
+    const tc=document.createElement("div");tc.className="two-col";
+    const left=document.createElement("div");left.innerHTML=`<div class="col-hd" style="color:var(--amber)">🍳 Appliances</div>`;
+    APP_ITEMS.forEach(k=>{
+      const orKey="app_or_"+k;
+      const checked=st.apps.includes(k);
+      const orVal=st.priceOverrides[orKey]||"";
+      const q=qk();const loc=getLoc(st.addr);
+      const baseCost=Math.round((APP_COSTS[k]?APP_COSTS[k][q]:0)*loc.mx);
+      const ci=document.createElement("div");
+      ci.style.cssText="margin-bottom:8px;padding:8px 10px;border-radius:8px;border:0.5px solid var(--border);background:var(--surface);transition:border-color .15s;cursor:pointer";
+      if(checked)ci.style.borderColor="var(--amber)";
+      ci.innerHTML=`
+        <div style="display:flex;align-items:center;gap:8px">
+          <div class="cbox"${checked?' style="background:var(--amber);border-color:var(--amber)"':''}><span class="ctick"${checked?' style="display:block"':''}>✓</span></div>
+          <span style="font-size:13px;color:${checked?"var(--text)":"var(--muted)"};flex:1">${k}</span>
+          <span style="font-size:11px;color:${orVal?"var(--orange)":"var(--faint)"}">${orVal?fmt(parseFloat(orVal)):fmt(baseCost)}</span>
+        </div>
+        ${checked?`<div style="margin-top:6px;padding-left:24px;display:flex;align-items:center;gap:6px">
+          <input type="number" class="price-override-inp" placeholder="Override price $" value="${orVal}"
+            style="width:140px;padding:5px 9px;font-size:12px;border-radius:7px;background:var(--input-bg);border:1.5px solid ${orVal?"var(--orange)":"var(--border2)"};color:var(--text);outline:none;-webkit-appearance:none"
+            data-orkey="${orKey}"/>
+          <span style="font-size:10px;color:${orVal?"var(--orange)":"var(--faint)"};font-weight:${orVal?"700":"400"}">${orVal?"★ OVERRIDDEN":"optional override"}</span>
+        </div>`:``}`;
+      // Checkbox toggle
+      const cbox=ci.querySelector(".cbox");
+      const mainRow=ci.querySelector("div");
+      mainRow.onclick=(e)=>{
+        if(e.target.tagName==="INPUT")return;
+        const inApps=st.apps.includes(k);
+        if(inApps)st.apps.splice(st.apps.indexOf(k),1);else st.apps.push(k);
+        recalc();renderAll();
+      };
+      // Override input
+      const inp=ci.querySelector(".price-override-inp");
+      if(inp){
+        inp.addEventListener("click",e=>e.stopPropagation());
+        inp.addEventListener("input",function(){
+          st.priceOverrides[orKey]=this.value;
+          recalc();
+        });
+      }
+      left.appendChild(ci);
+    });
+    const right=document.createElement("div");
+    right.innerHTML=`<div class="col-hd" style="color:var(--cyan)">❄️ HVAC</div>`;
+    HVAC_ITEMS.forEach(k=>{
+      const ci=document.createElement("div");ci.className="ci"+(st.hvac.includes(k)?" on":"");
+      ci.innerHTML=`<div class="cbox"><span class="ctick">✓</span></div><span class="clbl">${k}</span>`;
+      ci.onclick=()=>{
+        if(k==="No HVAC Work"){st.hvac=["No HVAC Work"];}
+        else{st.hvac=st.hvac.filter(x=>x!=="No HVAC Work");const idx=st.hvac.indexOf(k);if(idx>-1)st.hvac.splice(idx,1);else st.hvac.push(k);}
+        right.querySelectorAll(".ci").forEach(el=>el.classList.toggle("on",st.hvac.includes(el.querySelector(".clbl").textContent)));
+        // Show/hide spec panel
+        const sp=document.getElementById("hvac-spec-panel");
+        if(sp)sp.style.display=(!st.hvac.includes("No HVAC Work")&&st.hvac.length)?"block":"none";
+        recalc();
+      };
+      right.appendChild(ci);
+    });
+    tc.appendChild(left);tc.appendChild(right);
+    d.appendChild(tc);
+
+    // ── HVAC SPEC PANEL ──
+    const hvacPanel=document.createElement("div");hvacPanel.id="hvac-spec-panel";
+    const showHvacPanel=st.hvac.length>0&&!st.hvac.includes("No HVAC Work");
+    hvacPanel.style.display=showHvacPanel?"block":"none";
+    hvacPanel.style.cssText+="background:rgba(6,182,212,.06);border:1px solid rgba(6,182,212,.25);border-radius:10px;padding:14px;margin-bottom:14px";
+    hvacPanel.innerHTML=`
+      <div class="sec-lbl" style="color:var(--cyan);margin-bottom:10px">❄️ HVAC Specifications — used for accurate pricing</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+        <div>
+          <div class="field-label">Unit Type</div>
+          <select onchange="st.hvacSpecs.type=this.value;recalc()">
+            <option value="central_ac" ${st.hvacSpecs.type==="central_ac"?"selected":""}>Central AC</option>
+            <option value="heat_pump" ${st.hvacSpecs.type==="heat_pump"?"selected":""}>Heat Pump</option>
+            <option value="mini_split" ${st.hvacSpecs.type==="mini_split"?"selected":""}>Mini-Split / Ductless</option>
+            <option value="furnace" ${st.hvacSpecs.type==="furnace"?"selected":""}>Gas Furnace</option>
+            <option value="package_unit" ${st.hvacSpecs.type==="package_unit"?"selected":""}>Package Unit</option>
+          </select>
+        </div>
+        <div>
+          <div class="field-label">Brand</div>
+          <select onchange="st.hvacSpecs.brand=this.value;recalc()">
+            <option value="goodman" ${st.hvacSpecs.brand==="goodman"?"selected":""}>Goodman (Budget)</option>
+            <option value="rheem" ${st.hvacSpecs.brand==="rheem"?"selected":""}>Rheem (Standard)</option>
+            <option value="standard" ${st.hvacSpecs.brand==="standard"?"selected":""}>Standard / Generic</option>
+            <option value="carrier" ${st.hvacSpecs.brand==="carrier"?"selected":""}>Carrier (Premium)</option>
+            <option value="trane" ${st.hvacSpecs.brand==="trane"?"selected":""}>Trane (Premium)</option>
+            <option value="lennox" ${st.hvacSpecs.brand==="lennox"?"selected":""}>Lennox (Luxury)</option>
+          </select>
+        </div>
+        <div>
+          <div class="field-label">Tonnage (Capacity)</div>
+          <select onchange="st.hvacSpecs.tons=parseFloat(this.value);recalc()">
+            <option value="1.5" ${st.hvacSpecs.tons==1.5?"selected":""}>1.5 Ton (~500–700 sqft)</option>
+            <option value="2" ${st.hvacSpecs.tons==2?"selected":""}>2.0 Ton (~700–1000 sqft)</option>
+            <option value="2.5" ${st.hvacSpecs.tons==2.5?"selected":""}>2.5 Ton (~1000–1300 sqft)</option>
+            <option value="3" ${st.hvacSpecs.tons==3?"selected":""}>3.0 Ton (~1300–1600 sqft)</option>
+            <option value="3.5" ${st.hvacSpecs.tons==3.5?"selected":""}>3.5 Ton (~1600–2000 sqft)</option>
+            <option value="4" ${st.hvacSpecs.tons==4?"selected":""}>4.0 Ton (~2000–2400 sqft)</option>
+            <option value="5" ${st.hvacSpecs.tons==5?"selected":""}>5.0 Ton (~2400–3000 sqft)</option>
+          </select>
+        </div>
+        <div>
+          <div class="field-label">SEER Rating (Efficiency)</div>
+          <select onchange="st.hvacSpecs.seer=parseInt(this.value);recalc()">
+            <option value="14" ${st.hvacSpecs.seer==14?"selected":""}>14 SEER (Min. standard)</option>
+            <option value="16" ${st.hvacSpecs.seer==16?"selected":""}>16 SEER (Good)</option>
+            <option value="18" ${st.hvacSpecs.seer==18?"selected":""}>18 SEER (Better)</option>
+            <option value="20" ${st.hvacSpecs.seer==20?"selected":""}>20 SEER (Best)</option>
+            <option value="22" ${st.hvacSpecs.seer==22?"selected":""}>22 SEER+ (Ultra-high)</option>
+          </select>
+        </div>
+        <div>
+          <div class="field-label">Ductwork</div>
+          <select onchange="st.hvacSpecs.ductwork=this.value;recalc()">
+            <option value="existing" ${st.hvacSpecs.ductwork==="existing"?"selected":""}>Use Existing Ducts</option>
+            <option value="partial" ${st.hvacSpecs.ductwork==="partial"?"selected":""}>Partial Replacement</option>
+            <option value="new" ${st.hvacSpecs.ductwork==="new"?"selected":""}>All New Ductwork</option>
+          </select>
+        </div>
+        <div>
+          <div class="field-label">Number of Units</div>
+          <input type="number" min="1" max="20" value="${st.hvacSpecs.units}" onchange="st.hvacSpecs.units=parseInt(this.value)||1;recalc()" style="padding:8px 10px;font-size:13px"/>
+        </div>
+      </div>
+      <div id="hvac-cost-preview" style="background:var(--surface);border-radius:8px;padding:10px 14px;font-size:12px;color:var(--muted)">
+        Spec-based estimate will appear here
+      </div>`;
+    d.appendChild(hvacPanel);
+    // Update preview on render
+    setTimeout(()=>{updateHvacPreview();},10);
+    d.appendChild(tc);
+    const btn=document.createElement("button");btn.className="btn btn-primary";btn.textContent=`Next: ${STEP_TITLES[getNextRealStep(7)]||"Estimate"} →`;btn.onclick=()=>setStep(getNextRealStep(7));d.appendChild(btn);
+    return d;
+  }
+
+  // ── STEP 8: COSTS & SETTINGS ──
+  if(i===8){
+    const c=calc();
+    // Margin
+    const lbl1=document.createElement("div");lbl1.className="sec-lbl";lbl1.textContent="Margin on labor & equipment";d.appendChild(lbl1);
+    const mr=document.createElement("div");mr.className="m-row";
+    mr.innerHTML=`
+      <span class="m-lbl">Type:</span>
+      <select id="mtype-sel" style="width:auto;padding:7px 10px">
+        <option value="pct" ${st.mtype==="pct"?"selected":""}>Percentage (%)</option>
+        <option value="fix" ${st.mtype==="fix"?"selected":""}>Fixed ($)</option>
+      </select>
+      <span class="m-lbl">Value:</span>
+      <input type="number" id="mv" value="${st.margin}" min="0" max="500" step="1" style="width:70px;text-align:center;padding:7px"/>
+      <span id="munit" style="font-size:12px;color:var(--muted)">${st.mtype==="pct"?"%":"$"}</span>
+      <div class="m-note">= <strong id="mdisplay" style="color:var(--amber)">${fmt(c.margin)}</strong></div>`;
+    mr.querySelector("#mtype-sel").addEventListener("change",function(){st.mtype=this.value;document.getElementById("munit").textContent=this.value==="pct"?"%":"$";recalc();});
+    mr.querySelector("#mv").addEventListener("input",function(){st.margin=parseFloat(this.value)||0;recalc();});
+    // Margin override (flat override of computed margin)
+    const morRow=document.createElement("div");morRow.style.cssText="display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap";
+    morRow.innerHTML=`<span class="m-lbl">Override margin total:</span><input type="number" placeholder="Enter exact $ amount" value="${st.marginOverride}" style="width:150px;padding:7px 10px;font-size:13px;border-color:var(--amber)" oninput="st.marginOverride=this.value;recalc()"/><span style="font-size:11px;color:var(--faint)">(leave blank to use % above)</span>`;
+    mr.appendChild(morRow);
+    d.appendChild(mr);
+
+    const div1=document.createElement("div");div1.className="divider";d.appendChild(div1);
+    // Contingency
+    const lbl2=document.createElement("div");lbl2.className="sec-lbl";lbl2.textContent="Contingency reserve";d.appendChild(lbl2);
+    const info1=document.createElement("div");info1.className="info-bar";info1.style.marginBottom="10px";info1.textContent="ℹ️ Standard practice: 10–15% contingency covers unexpected site conditions, price changes, and scope additions";d.appendChild(info1);
+    const crow=document.createElement("div");crow.className="m-row";
+    crow.innerHTML=`<span class="m-lbl">Contingency:</span><input type="number" id="contingency-val" value="${st.contingencyPct}" min="0" max="50" step="1" style="width:70px;text-align:center;padding:7px"/><span style="font-size:12px;color:var(--muted)">%</span><div class="m-note">= <strong id="contingency-display" style="color:var(--amber)">${fmt(c.contingency)}</strong></div>`;
+    crow.querySelector("#contingency-val").addEventListener("input",function(){st.contingencyPct=parseFloat(this.value)||0;recalc();const cd=document.getElementById("contingency-display");if(cd)cd.textContent=fmt(calc().contingency);});
+    d.appendChild(crow);
+
+    const div2=document.createElement("div");div2.className="divider";d.appendChild(div2);
+    // Permits
+    const lbl3=document.createElement("div");lbl3.className="sec-lbl";lbl3.textContent="Permit fees";d.appendChild(lbl3);
+    const prow=document.createElement("div");prow.style.cssText="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap";
+    const pci=document.createElement("div");pci.className="ci"+(st.includePermits?" on":"");pci.innerHTML=`<div class="cbox"><span class="ctick">✓</span></div><span class="clbl">Include estimated permit fees</span>`;
+    pci.onclick=()=>{st.includePermits=!st.includePermits;pci.classList.toggle("on",st.includePermits);recalc();};
+    prow.appendChild(pci);
+    if(st.includePermits){
+      const pb=document.createElement("span");pb.className="badge badge-amber";
+      pb.textContent=c.permit>0?`Est. ${fmt(c.permit)} based on selected items`:"No permits needed for selected items";
+      prow.appendChild(pb);
+    }
+    d.appendChild(prow);
+
+    const div3=document.createElement("div");div3.className="divider";d.appendChild(div3);
+    // Tax
+    const lbl4=document.createElement("div");lbl4.className="sec-lbl";lbl4.textContent="Sales tax on materials";d.appendChild(lbl4);
+    const trow=document.createElement("div");trow.className="m-row";
+    const tci=document.createElement("div");tci.className="ci"+(st.includeTax?" on":"");tci.style.marginRight="10px";tci.innerHTML=`<div class="cbox"><span class="ctick">✓</span></div><span class="clbl">Include materials tax</span>`;
+    tci.onclick=()=>{st.includeTax=!st.includeTax;tci.classList.toggle("on",st.includeTax);recalc();renderAll();};
+    trow.appendChild(tci);
+    if(st.includeTax){
+      trow.innerHTML+=`<span class="m-lbl">Tax rate:</span><input type="number" id="tax-rate" value="${st.taxRate}" min="0" max="20" step="0.1" style="width:70px;text-align:center;padding:7px"/><span style="font-size:12px;color:var(--muted)">%</span>`;
+      setTimeout(()=>{const tr=document.getElementById("tax-rate");if(tr)tr.addEventListener("input",function(){st.taxRate=parseFloat(this.value)||0;recalc();});},50);
+    }
+    d.appendChild(trow);
+
+    const div4=document.createElement("div");div4.className="divider";d.appendChild(div4);
+    // Custom line item
+    const lbl5=document.createElement("div");lbl5.className="sec-lbl";lbl5.textContent="Custom line item";d.appendChild(lbl5);
+    const cli=document.createElement("div");cli.className="ci"+(st.customLine.enabled?" on":"");cli.style.marginBottom="8px";
+    cli.innerHTML=`<div class="cbox"><span class="ctick">✓</span></div><span class="clbl">Add a custom line item</span>`;
+    cli.onclick=(e)=>{if(e.target.tagName==="INPUT")return;st.customLine.enabled=!st.customLine.enabled;recalc();renderAll();};
+    d.appendChild(cli);
+    if(st.customLine.enabled){const ir=document.createElement("div");ir.style.cssText="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap";ir.innerHTML=`<input type="text" style="flex:1;min-width:140px" placeholder="Item description" value="${st.customLine.label}" oninput="st.customLine.label=this.value"/><input type="number" style="width:130px" placeholder="Amount ($)" value="${st.customLine.amount}" oninput="st.customLine.amount=this.value;recalc()"/>`;d.appendChild(ir);}
+
+    const div5=document.createElement("div");div5.className="divider";d.appendChild(div5);
+    // Upload
+    const lbl6=document.createElement("div");lbl6.className="sec-lbl";lbl6.textContent="Attach photos, price sheets or documents (optional)";d.appendChild(lbl6);
+    d.appendChild(makeUploadZone());
+    if(st.files.length>0)d.appendChild(makeFileGrid());
+
+    const btn=document.createElement("button");btn.className="btn btn-primary";btn.style.marginTop="14px";
+    btn.innerHTML="🧾 Generate Estimate";
+    btn.onclick=()=>{st.margin=parseFloat(document.getElementById("mv")?.value||20)||0;st.mtype=document.getElementById("mtype-sel")?.value||"pct";setStep(9);};
+    d.appendChild(btn);
+    return d;
+  }
+  return d;
+}
+
+// ── ROOM BLOCK ─────────────────────────────────────────────────────────────────
+function buildRoomBlock(rDef,mx){
+  const roomTotal=calcRoomTotal(rDef,mx);
+  const block=document.createElement("div");block.className="room-block";
+  const hdr=document.createElement("div");hdr.className="room-hdr"+(rDef.open?" open":"");
+  hdr.innerHTML=`<span class="room-icon">${rDef.icon}</span><span class="room-name">${rDef.label}</span>`;
+  const qc=document.createElement("div");qc.className="qty-ctrl";
+  const qm=document.createElement("button");qm.className="qbtn";qm.textContent="−";
+  qm.onclick=(e)=>{e.stopPropagation();if(rDef.qty>0)rDef.qty--;if(rDef.qty===0)rDef.open=false;renderAll();};
+  const qn=document.createElement("div");qn.className="qval";qn.textContent=rDef.qty;
+  const qp=document.createElement("button");qp.className="qbtn";qp.textContent="+";
+  qp.onclick=(e)=>{e.stopPropagation();rDef.qty++;rDef.open=true;renderAll();};
+  qc.appendChild(qm);qc.appendChild(qn);qc.appendChild(qp);
+  if(roomTotal>0){const st2=document.createElement("span");st2.className="room-subtotal";st2.textContent=fmt(roomTotal);hdr.appendChild(st2);}
+  hdr.appendChild(qc);
+  const chev=document.createElement("span");chev.className="room-chev"+(rDef.open?" open":"");chev.textContent="▾";hdr.appendChild(chev);
+  hdr.onclick=(e)=>{if(e.target.classList.contains("qbtn")||e.target.classList.contains("qval"))return;if(rDef.qty>0){rDef.open=!rDef.open;renderAll();}};
+  block.appendChild(hdr);
+
+  if(rDef.open&&rDef.qty>0){
+    for(let inst=0;inst<rDef.qty;inst++){
+      if(rDef.qty>1){const il=document.createElement("div");il.className="inst-lbl";il.textContent=`${rDef.label} #${inst+1}`;block.appendChild(il);}
+      // Size strip
+      const sk2=szKey(rDef.key,inst);const curSqft=roomSizes[sk2]||"";
+      const sstrip=document.createElement("div");sstrip.className="size-strip";
+      const szInp=document.createElement("input");szInp.type="number";szInp.className="inp size-inp";szInp.placeholder=rDef.defaultSqft;szInp.value=curSqft;szInp.min="1";szInp.max="5000";
+      szInp.oninput=function(){roomSizes[sk2]=this.value;recalc();};
+      const sqftN=parseFloat(curSqft)||0;
+      sstrip.innerHTML=`<label>📐 Room size:</label>`;sstrip.appendChild(szInp);
+      const u=document.createElement("span");u.style.cssText="font-size:11px;color:var(--dim)";u.textContent="sq ft";sstrip.appendChild(u);
+      if(sqftN>0){const d2=Math.round(Math.sqrt(sqftN));const tag=document.createElement("span");tag.className="sqft-tag";tag.textContent=`≈ ${d2}×${Math.round(sqftN/d2)} ft`;sstrip.appendChild(tag);}
+      else{const hint=document.createElement("span");hint.style.cssText="font-size:10px;color:var(--faint);font-style:italic";hint.textContent=`(default ${rDef.defaultSqft} sqft)`;sstrip.appendChild(hint);}
+      block.appendChild(sstrip);
+      // Select all / clear
+      const actRow=document.createElement("div");actRow.className="room-actions";
+      const selAll=document.createElement("button");selAll.className="btn btn-ghost btn-sm";selAll.textContent="✓ Select All";
+      selAll.onclick=()=>{rDef.items.forEach(item=>{checkedItems[ciKey(rDef.key,inst,item.key)]=true;});renderAll();recalc();};
+      const clrAll=document.createElement("button");clrAll.className="btn btn-ghost btn-sm";clrAll.textContent="✕ Clear All";
+      clrAll.onclick=()=>{rDef.items.forEach(item=>{delete checkedItems[ciKey(rDef.key,inst,item.key)];});renderAll();recalc();};
+      actRow.appendChild(selAll);actRow.appendChild(clrAll);
+      block.appendChild(actRow);
+      // Work items
+      const grid=document.createElement("div");grid.className="items-grid";
+      const sqft=parseFloat(roomSizes[sk2])||0;
+      rDef.items.forEach(item=>{
+        const k=ciKey(rDef.key,inst,item.key);const checked=!!checkedItems[k];
+        const cost=getItemCost(item,sqft,rDef.defaultSqft,mx);
+        const wi=document.createElement("div");wi.className="wi"+(checked?" on":"");
+        const ppsfTag=item.scaled&&item.ppsf&&sqft>0?`<span class="ppsf-tag"> /sqft</span>`:"";
+        const orKey="or_"+k;const orVal=st.priceOverrides[orKey]||"";
+        // Build item row
+        wi.innerHTML=`
+          <div class="cbox"><span class="ctick">✓</span></div>
+          <div class="wi-info">
+            <div class="wi-lbl">${item.label}${ppsfTag}</div>
+            <div class="wi-cost-row" style="display:flex;align-items:center;gap:6px;margin-top:3px;flex-wrap:wrap">
+              <span class="wi-cost" style="color:${checked?(orVal?"#f97316":"var(--amber)"):"var(--faint)"}">${orVal?fmt(parseFloat(orVal)):fmt(cost)}</span>
+              ${checked?`<span style="font-size:9px;color:var(--faint)">est: ${fmt(cost)}</span>`:""}
+            </div>
+            ${checked?`<div class="override-wrap" style="margin-top:5px;display:flex;align-items:center;gap:6px">
+              <input type="number" class="price-override-inp" placeholder="Enter your price $" value="${orVal}" style="width:140px;padding:5px 9px;font-size:12px;border-radius:7px;background:var(--input-bg);border:1.5px solid ${orVal?"var(--orange)":"var(--border2)"};color:var(--text);outline:none;-webkit-appearance:none"/>
+              ${orVal?`<span style="font-size:10px;color:var(--orange);font-weight:700">★ OVERRIDDEN</span>`:`<span style="font-size:10px;color:var(--faint)">optional override</span>`}
+            </div>`:""}
+          </div>`;
+        // Check/uncheck click
+        wi.onclick=(e)=>{
+          if(e.target.classList.contains("price-override-inp")||e.target.tagName==="INPUT")return;
+          checkedItems[k]=!checkedItems[k];
+          wi.classList.toggle("on",checkedItems[k]);
+          // Don't call renderAll — just update this item in place
+          if(checkedItems[k]){
+            // Add override input inline
+            const info=wi.querySelector(".wi-info");
+            const costRow=wi.querySelector(".wi-cost-row");
+            if(costRow){
+              const estSpan=document.createElement("span");estSpan.style.cssText="font-size:9px;color:var(--faint)";estSpan.textContent=`est: ${fmt(cost)}`;
+              costRow.appendChild(estSpan);
+            }
+            const wrap=document.createElement("div");wrap.className="override-wrap";wrap.style.cssText="margin-top:5px;display:flex;align-items:center;gap:6px";
+            const inp=document.createElement("input");inp.type="number";inp.className="price-override-inp";inp.placeholder="Enter your price $";inp.value=st.priceOverrides[orKey]||"";inp.style.cssText="width:140px;padding:5px 9px;font-size:12px;border-radius:7px;background:var(--input-bg);border:1.5px solid var(--border2);color:var(--text);outline:none;-webkit-appearance:none";
+            const hint=document.createElement("span");hint.style.cssText="font-size:10px;color:var(--faint)";hint.textContent="optional override";
+            inp.addEventListener("input",function(){
+              st.priceOverrides[orKey]=this.value;
+              const wiCost=wi.querySelector(".wi-cost");
+              if(wiCost){wiCost.textContent=this.value?fmt(parseFloat(this.value)||0):fmt(cost);wiCost.style.color=this.value?"#f97316":"var(--amber)";}
+              hint.textContent=this.value?"★ OVERRIDDEN":"optional override";hint.style.color=this.value?"var(--orange)":"var(--faint)";
+              inp.style.borderColor=this.value?"var(--orange)":"var(--border2)";
+              recalc();
+            });
+            inp.addEventListener("click",e=>e.stopPropagation());
+            wrap.appendChild(inp);wrap.appendChild(hint);info.appendChild(wrap);
+          } else {
+            // Remove override wrap and reset
+            const wrap=wi.querySelector(".override-wrap");if(wrap)wrap.remove();
+            const estSpans=wi.querySelectorAll(".wi-cost-row span:not(.wi-cost)");estSpans.forEach(s=>s.remove());
+            delete st.priceOverrides[orKey];
+          }
+          wi.querySelector(".wi-cost").style.color=checkedItems[k]?"var(--amber)":"var(--faint)";
+          recalc();
+        };
+        grid.appendChild(wi);
+      });
+      block.appendChild(grid);
+    }
+  }
+  return block;
+}
+
+// ── BATH BLOCK ─────────────────────────────────────────────────────────────────
+function buildBathBlock(bDef,mx){
+  const bathTotal=calcBathTotal(bDef,mx);
+  const block=document.createElement("div");block.className="room-block";
+  const hdr=document.createElement("div");hdr.className="room-hdr"+(bDef.qty>0?" open":"");
+  hdr.innerHTML=`<span class="room-icon">${bDef.icon}</span><span class="room-name">${bDef.label}</span><span style="font-size:11px;color:var(--faint);margin-left:4px">${bDef.desc}</span>`;
+  const qc=document.createElement("div");qc.className="qty-ctrl";
+  const qm=document.createElement("button");qm.className="qbtn";qm.textContent="−";qm.onclick=(e)=>{e.stopPropagation();if(bDef.qty>0)bDef.qty--;renderAll();};
+  const qn=document.createElement("div");qn.className="qval";qn.textContent=bDef.qty;
+  const qp=document.createElement("button");qp.className="qbtn";qp.textContent="+";qp.onclick=(e)=>{e.stopPropagation();bDef.qty++;renderAll();};
+  qc.appendChild(qm);qc.appendChild(qn);qc.appendChild(qp);
+  if(bathTotal>0){const st2=document.createElement("span");st2.className="room-subtotal";st2.textContent=fmt(bathTotal);hdr.appendChild(st2);}
+  hdr.appendChild(qc);
+  block.appendChild(hdr);
+  if(bDef.qty>0){
+    for(let inst=0;inst<bDef.qty;inst++){
+      if(bDef.qty>1){const il=document.createElement("div");il.className="inst-lbl";il.textContent=`${bDef.label} #${inst+1}`;block.appendChild(il);}
+      const sk2=szKey(bDef.key,inst);const curSqft=bathSizes[sk2]||"";
+      const sstrip=document.createElement("div");sstrip.className="size-strip";
+      const szInp=document.createElement("input");szInp.type="number";szInp.className="inp size-inp";szInp.placeholder=bDef.defaultSqft;szInp.value=curSqft;szInp.min="1";szInp.max="500";
+      szInp.oninput=function(){bathSizes[sk2]=this.value;recalc();};
+      sstrip.innerHTML=`<label>📐 Bath size:</label>`;sstrip.appendChild(szInp);
+      const u=document.createElement("span");u.style.cssText="font-size:11px;color:var(--dim)";u.textContent="sq ft";sstrip.appendChild(u);
+      const sqftN=parseFloat(curSqft)||0;
+      if(sqftN>0){const tag=document.createElement("span");tag.className="sqft-tag";tag.textContent=`${sqftN} sqft entered`;sstrip.appendChild(tag);}
+      else{const hint=document.createElement("span");hint.style.cssText="font-size:10px;color:var(--faint);font-style:italic";hint.textContent=`(default ${bDef.defaultSqft} sqft)`;sstrip.appendChild(hint);}
+      block.appendChild(sstrip);
+      const actRow=document.createElement("div");actRow.className="room-actions";
+      const selAll=document.createElement("button");selAll.className="btn btn-ghost btn-sm";selAll.textContent="✓ Select All";
+      selAll.onclick=()=>{bDef.items.forEach(item=>{checkedItems[bathKey(bDef.key,inst,item.key)]=true;});renderAll();recalc();};
+      const clrAll=document.createElement("button");clrAll.className="btn btn-ghost btn-sm";clrAll.textContent="✕ Clear All";
+      clrAll.onclick=()=>{bDef.items.forEach(item=>{delete checkedItems[bathKey(bDef.key,inst,item.key)];});renderAll();recalc();};
+      actRow.appendChild(selAll);actRow.appendChild(clrAll);block.appendChild(actRow);
+      const grid=document.createElement("div");grid.className="items-grid";
+      const sqft=parseFloat(bathSizes[sk2])||0;
+      bDef.items.forEach(item=>{
+        const k=bathKey(bDef.key,inst,item.key);const checked=!!checkedItems[k];
+        const cost=getItemCost(item,sqft,bDef.defaultSqft,mx);
+        const wi=document.createElement("div");wi.className="wi"+(checked?" on":"");
+        const ppsfTag=item.scaled&&item.ppsf&&sqft>0?`<span class="ppsf-tag"> /sqft</span>`:"";
+        const orKey="or_"+k;const orVal=st.priceOverrides[orKey]||"";
+        // Build item row
+        wi.innerHTML=`
+          <div class="cbox"><span class="ctick">✓</span></div>
+          <div class="wi-info">
+            <div class="wi-lbl">${item.label}${ppsfTag}</div>
+            <div class="wi-cost-row" style="display:flex;align-items:center;gap:6px;margin-top:3px;flex-wrap:wrap">
+              <span class="wi-cost" style="color:${checked?(orVal?"#f97316":"var(--amber)"):"var(--faint)"}">${orVal?fmt(parseFloat(orVal)):fmt(cost)}</span>
+              ${checked?`<span style="font-size:9px;color:var(--faint)">est: ${fmt(cost)}</span>`:""}
+            </div>
+            ${checked?`<div class="override-wrap" style="margin-top:5px;display:flex;align-items:center;gap:6px">
+              <input type="number" class="price-override-inp" placeholder="Enter your price $" value="${orVal}" style="width:140px;padding:5px 9px;font-size:12px;border-radius:7px;background:var(--input-bg);border:1.5px solid ${orVal?"var(--orange)":"var(--border2)"};color:var(--text);outline:none;-webkit-appearance:none"/>
+              ${orVal?`<span style="font-size:10px;color:var(--orange);font-weight:700">★ OVERRIDDEN</span>`:`<span style="font-size:10px;color:var(--faint)">optional override</span>`}
+            </div>`:""}
+          </div>`;
+        // Check/uncheck click
+        wi.onclick=(e)=>{
+          if(e.target.classList.contains("price-override-inp")||e.target.tagName==="INPUT")return;
+          checkedItems[k]=!checkedItems[k];
+          wi.classList.toggle("on",checkedItems[k]);
+          // Don't call renderAll — just update this item in place
+          if(checkedItems[k]){
+            // Add override input inline
+            const info=wi.querySelector(".wi-info");
+            const costRow=wi.querySelector(".wi-cost-row");
+            if(costRow){
+              const estSpan=document.createElement("span");estSpan.style.cssText="font-size:9px;color:var(--faint)";estSpan.textContent=`est: ${fmt(cost)}`;
+              costRow.appendChild(estSpan);
+            }
+            const wrap=document.createElement("div");wrap.className="override-wrap";wrap.style.cssText="margin-top:5px;display:flex;align-items:center;gap:6px";
+            const inp=document.createElement("input");inp.type="number";inp.className="price-override-inp";inp.placeholder="Enter your price $";inp.value=st.priceOverrides[orKey]||"";inp.style.cssText="width:140px;padding:5px 9px;font-size:12px;border-radius:7px;background:var(--input-bg);border:1.5px solid var(--border2);color:var(--text);outline:none;-webkit-appearance:none";
+            const hint=document.createElement("span");hint.style.cssText="font-size:10px;color:var(--faint)";hint.textContent="optional override";
+            inp.addEventListener("input",function(){
+              st.priceOverrides[orKey]=this.value;
+              const wiCost=wi.querySelector(".wi-cost");
+              if(wiCost){wiCost.textContent=this.value?fmt(parseFloat(this.value)||0):fmt(cost);wiCost.style.color=this.value?"#f97316":"var(--amber)";}
+              hint.textContent=this.value?"★ OVERRIDDEN":"optional override";hint.style.color=this.value?"var(--orange)":"var(--faint)";
+              inp.style.borderColor=this.value?"var(--orange)":"var(--border2)";
+              recalc();
+            });
+            inp.addEventListener("click",e=>e.stopPropagation());
+            wrap.appendChild(inp);wrap.appendChild(hint);info.appendChild(wrap);
+          } else {
+            // Remove override wrap and reset
+            const wrap=wi.querySelector(".override-wrap");if(wrap)wrap.remove();
+            const estSpans=wi.querySelectorAll(".wi-cost-row span:not(.wi-cost)");estSpans.forEach(s=>s.remove());
+            delete st.priceOverrides[orKey];
+          }
+          wi.querySelector(".wi-cost").style.color=checkedItems[k]?"var(--amber)":"var(--faint)";
+          recalc();
+        };
+        grid.appendChild(wi);
+      });
+      block.appendChild(grid);
+    }
+  }
+  return block;
+}
+
+// ── HELPERS ────────────────────────────────────────────────────────────────────
+function locHtml(addr,loc){
+  if(addr&&addr.trim().length>3)return`<div style="display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:7px;font-size:11px;font-weight:600;background:rgba(245,158,11,.1);color:var(--amber);border:0.5px solid rgba(245,158,11,.3)">📍 ${loc.label}</div>`;
+  return`<div style="font-size:11px;color:var(--faint)">Enter city and state for automatic location-adjusted pricing</div>`;
+}
+function handleAddr(val){
+  st.addr=val;
+  const wrap=document.getElementById("loc-wrap");if(wrap)wrap.innerHTML=locHtml(val,getLoc(val));
+  recalc();
+}
+function makeUploadZone(){
+  const z=document.createElement("div");z.className="upload-zone"+(st.files.length>0?" has":"");
+  z.innerHTML=`<div style="font-size:24px;margin-bottom:5px">📎</div><div style="font-size:12px;color:var(--muted)">${st.files.length>0?st.files.length+" file(s) attached":"Click to upload photos, price sheets, or reference documents"}</div><div style="font-size:10px;color:var(--faint);margin-top:3px">JPG, PNG, PDF, Excel accepted</div>`;
+  const fi=document.createElement("input");fi.type="file";fi.multiple=true;fi.accept="image/*,.pdf,.xlsx,.xls,.doc,.docx";fi.style.display="none";
+  fi.onchange=(e)=>{Array.from(e.target.files).forEach(file=>{
+    const obj={name:file.name,type:file.type,dataUrl:null};
+    const ext=file.name.split('.').pop().toLowerCase();
+    if(file.type.startsWith("image/")){const r=new FileReader();r.onload=(ev)=>{obj.dataUrl=ev.target.result;};r.readAsDataURL(file);}
+    // Auto-parse price sheets
+    if(["csv","xlsx","xls","pdf","txt"].includes(ext)){parsePriceSheet(file);}
+    st.files.push(obj);
+  });setTimeout(()=>renderAll(),350);};
+  z.onclick=()=>fi.click();z.appendChild(fi);return z;
+}
+function makeFileGrid(){
+  const fg=document.createElement("div");fg.className="file-grid";
+  st.files.forEach((f,idx)=>{
+    const wrap=document.createElement("div");wrap.className="file-thumb";
+    if(f.dataUrl){const img=document.createElement("img");img.src=f.dataUrl;img.alt=f.name;wrap.appendChild(img);}
+    else{const doc=document.createElement("div");doc.className="doc-inner";doc.textContent=f.name.endsWith(".pdf")?"📄":f.name.match(/xlsx?/)?"📊":"📎";wrap.appendChild(doc);}
+    const nm=document.createElement("div");nm.className="f-name";nm.textContent=f.name;
+    const del=document.createElement("button");del.className="del-btn";del.textContent="×";del.onclick=(e)=>{e.stopPropagation();st.files.splice(idx,1);renderAll();};
+    wrap.appendChild(nm);wrap.appendChild(del);fg.appendChild(wrap);
+  });
+  return fg;
+}
+
+// ── LAWN HELPERS ──────────────────────────────────────────────────────────────
+const LAWN_SCOPE_DESC={
+  touchup:"Minor maintenance, edging, overseeding, and spot treatments. Ideal for lawns in good condition needing seasonal upkeep.",
+  enhancement:"Sod or re-seeding, mulching, planting beds, new shrubs, and landscape lighting. Best for refreshing an existing yard.",
+  new:"Full design and installation from scratch — grading, irrigation, sod or seed, trees, shrubs, pathways, and lighting.",
+  major:"Complete renovation: removal of existing landscaping, regrading, drainage solutions, retaining walls, full replanting, and hardscape."
+};
+const LAWN_PPSF={
+  touchup:{b:0.5,a:1.0,l:2.0},
+  enhancement:{b:2,a:4,l:8},
+  new:{b:5,a:9,l:18},
+  major:{b:7,a:14,l:25}
+};
+function getLawnCost(mx){
+  const sqft=parseFloat(st.lawnSqft)||0;
+  const cond=st.lawnCondition||"enhancement";
+  const q=qk();
+  if(sqft>0)return Math.round(LAWN_PPSF[cond][q]*sqft*mx);
+  const defaults={b:3000,a:7000,l:18000};
+  return Math.round(defaults[q]*mx);
+}
+function updateLawnDesc(){
+  const desc=document.getElementById("lawn-scope-desc");
+  const costEl=document.getElementById("lawn-cost-display");
+  if(desc)desc.textContent=LAWN_SCOPE_DESC[st.lawnCondition||"enhancement"]||"";
+  if(costEl){
+    const loc=getLoc(st.addr);const c=getLawnCost(loc.mx);
+    const sqft=parseFloat(st.lawnSqft)||0;
+    const ppsf=LAWN_PPSF[st.lawnCondition||"enhancement"][qk()];
+    costEl.textContent=sqft>0?`Estimated: ${fmt(c)} (${sqft.toLocaleString()} sqft @ $${ppsf}/sqft adjusted for location)`:
+      `Estimated: ${fmt(c)} — enter sq footage above for precise pricing`;
+  }
+}
+
+// ── RENDER ESTIMATE ────────────────────────────────────────────────────────────
+function renderEst(c){
+  const scope=SCOPES.find(s=>s.id===st.scope)?.label||"—";
+  const loc=c.loc;const pct=Math.round((loc.mx-1)*100);const dir=pct>=0?"+":"";
+  const adjColor=pct>30?"var(--red)":pct>10?"var(--amber)":pct<-5?"var(--green)":"var(--muted)";
+  const mx=loc.mx;
+  let itemLines=[];
+  rooms.forEach(rDef=>{for(let inst=0;inst<rDef.qty;inst++){const sqft=parseFloat(roomSizes[szKey(rDef.key,inst)])||0;const il=rDef.qty>1?` #${inst+1}`:"";rDef.items.forEach(item=>{const k=ciKey(rDef.key,inst,item.key);if(checkedItems[k]){const cost=getItemCost(item,sqft,rDef.defaultSqft,mx);const sn=sqft>0&&item.scaled?` (${sqft} sqft)`:"";itemLines.push({label:`${rDef.label}${il} — ${item.label}${sn}`,cost});}});}});
+  baths.forEach(bDef=>{for(let inst=0;inst<bDef.qty;inst++){const sqft=parseFloat(bathSizes[szKey(bDef.key,inst)])||0;const il=bDef.qty>1?` #${inst+1}`:"";bDef.items.forEach(item=>{const k=bathKey(bDef.key,inst,item.key);if(checkedItems[k]){const cost=getItemCost(item,sqft,bDef.defaultSqft,mx);const sn=sqft>0&&item.scaled?` (${sqft} sqft)`:"";itemLines.push({label:`${bDef.label}${il} — ${item.label}${sn}`,cost});}});}});
+  let totalSqft=0;rooms.forEach(r=>{for(let i=0;i<r.qty;i++)totalSqft+=parseFloat(roomSizes[szKey(r.key,i)])||r.defaultSqft;});baths.forEach(b=>{for(let i=0;i<b.qty;i++)totalSqft+=parseFloat(bathSizes[szKey(b.key,i)])||b.defaultSqft;});
+  const expiryDate=new Date();expiryDate.setDate(expiryDate.getDate()+30);
+  const expiryStr=expiryDate.toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"});
+  const bars=[
+    {l:"Room Work Items",v:c.rT,col:"#3b82f6"},{l:"Bathrooms",v:c.bT,col:"#06b6d4"},
+    {l:"Other / Exterior Work",v:c.oT,col:"#8b5cf6"},{l:"Labor",v:c.lab,col:"#22c55e"},
+    {l:"Equipment & Tools",v:c.equ,col:"#a78bfa"},{l:"Appliances",v:c.apps,col:"#f59e0b"},
+    {l:"HVAC",v:c.hvac,col:"#0ea5e9"},{l:"Permit Fees",v:c.permit,col:"#84cc16"},
+    {l:"Custom Items",v:c.custom,col:"#f97316"},{l:"Margin",v:c.margin,col:"#ef4444"},
+    {l:"Contingency Reserve",v:c.contingency,col:"#f43f5e"},{l:"Materials Tax",v:c.tax,col:"#fb923c"},
+  ].filter(b=>b.v>0);
+  const tot=c.tot||1;
+  document.getElementById("estimate").innerHTML=`
+  <div class="est-wrap">
+    <div class="est-cover">
+      <div class="est-cover-top">
+        <div>
+          <div class="est-co-name">${st.contractorName||"RenovateIQ Pro Estimate"}</div>
+          <div class="est-co-sub">${st.contractorPhone||""}${st.contractorLicense?" · License: "+st.contractorLicense:""}</div>
+        </div>
+        <div class="est-meta">
+          <div class="est-num-badge">ESTIMATE #</div>
+          <div style="font-family:'Syne',sans-serif;font-size:16px;font-weight:800;color:var(--amber)">${st.estimateNum}</div>
+          <div class="est-date">Issued: ${st.createdDate}</div>
+          <div class="est-expiry">Valid until: ${expiryStr}</div>
+        </div>
+      </div>
+      <div class="print-only" style="display:none;font-size:10px;color:#666;margin-bottom:8px">★ Items marked OVERRIDE reflect contractor-adjusted pricing</div>
+      <div class="est-parties">
+        <div>
+          <div class="party-lbl">Prepared For</div>
+          <div class="party-val">${st.clientName||"—"}</div>
+          ${st.clientEmail?`<div class="party-sub">${st.clientEmail}</div>`:""}
+          ${st.clientPhone?`<div class="party-sub">${st.clientPhone}</div>`:""}
+        </div>
+        <div>
+          <div class="party-lbl">Project Location</div>
+          <div class="party-val">${st.projectName||scope+" Renovation"}</div>
+          <div class="party-sub">${st.addr||"—"}</div>
+          <div class="party-sub" style="color:var(--amber);margin-top:2px">📍 ${loc.label}</div>
+        </div>
+      </div>
+    </div>
+    <div class="est-body">
+      <div class="validity-stamp">✅ Valid for 30 days — expires ${expiryStr}</div>
+      <div class="summary-tiles">
+        <div class="stile"><div class="stile-lbl">Scope</div><div class="stile-val">${scope}</div></div>
+        <div class="stile"><div class="stile-lbl">Quality Tier</div><div class="stile-val" style="text-transform:capitalize">${st.qual}</div></div>
+        <div class="stile"><div class="stile-lbl">Total Area</div><div class="stile-val">${totalSqft.toLocaleString()} sqft</div></div>
+        <div class="stile"><div class="stile-lbl">Line Items</div><div class="stile-val">${itemLines.length} items</div></div>
+        <div class="stile"><div class="stile-lbl">Contingency</div><div class="stile-val">${st.contingencyPct}%</div></div>
+        <div class="stile"><div class="stile-lbl">Files</div><div class="stile-val">${st.files.length} attached</div></div>
+      </div>
+      <div class="adj-box">
+        <div><div class="sec-lbl" style="margin-bottom:2px">Location Adjustment</div><div style="font-size:12px;color:var(--text)">📍 ${loc.label}</div></div>
+        <div class="adj-pct" style="color:${adjColor}">${dir}${pct}%</div>
+      </div>
+      ${itemLines.length>0?`<div class="sec-lbl" style="margin-bottom:6px">Itemized Scope of Work</div><div class="itemized-list">${itemLines.map(l=>`<div class="il-row"><span class="il-label">${l.label}${l.overridden?' <span style="font-size:9px;color:var(--amber);font-weight:700">★ OVERRIDE</span>':""}</span><span class="il-val">${fmt(l.cost)}</span></div>`).join("")}</div>`:""}
+      <div class="sec-lbl" style="margin:14px 0 8px">Cost Breakdown</div>
+      ${bars.map(b=>`<div class="bar-row"><div class="bar-top"><span class="bar-lbl">${b.l}</span><span class="bar-val" style="color:${b.col}">${fmt(b.v)}</span></div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(b.v/tot*100)}%;background:${b.col}"></div></div></div>`).join("")}
+      <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:8px;overflow:hidden;margin:14px 0">
+        ${c.base>0?`<div class="il-row"><span class="il-label">Materials & Labor Base</span><span class="il-val">${fmt(c.base+c.lab+c.equ)}</span></div>`:""}
+        ${c.apps>0?`<div class="il-row"><span class="il-label">Appliances</span><span class="il-val">${fmt(c.apps)}</span></div>`:""}
+        ${c.hvac>0?`<div class="il-row"><span class="il-label">HVAC</span><span class="il-val">${fmt(c.hvac)}</span></div>`:""}
+        ${c.permit>0?`<div class="il-row"><span class="il-label">Estimated Permit Fees</span><span class="il-val">${fmt(c.permit)}</span></div>`:""}
+        ${c.custom>0?`<div class="il-row"><span class="il-label">${st.customLine.label||"Custom Item"}</span><span class="il-val">${fmt(c.custom)}</span></div>`:""}
+        ${c.margin>0?`<div class="il-row"><span class="il-label">Contractor Margin</span><span class="il-val">${fmt(c.margin)}</span></div>`:""}
+        <div class="il-row" style="border-top:0.5px solid var(--border2)"><span class="il-label" style="font-weight:600;color:var(--text)">Subtotal</span><span class="il-val">${fmt(c.subtotal)}</span></div>
+        ${c.contingency>0?`<div class="il-row"><span class="il-label">Contingency Reserve (${st.contingencyPct}%)</span><span class="il-val" style="color:var(--red)">${fmt(c.contingency)}</span></div>`:""}
+        ${c.tax>0?`<div class="il-row"><span class="il-label">Sales Tax on Materials (${st.taxRate}%)</span><span class="il-val">${fmt(c.tax)}</span></div>`:""}
+      </div>
+      <div class="tot-box">
+        <div><div class="tot-lbl">Total Project Estimate</div><div class="tot-sub">Includes all labor, materials, margin${c.contingency>0?", contingency":""}${c.tax>0?", tax":""}</div></div>
+        <div class="tot-val">${fmt(c.tot)}</div>
+      </div>
+      <div class="range-grid">
+        <div class="rc"><div class="rc-lbl">Low (−15%)</div><div class="rc-val" style="color:var(--green)">${fmt(Math.round(c.tot*.85))}</div></div>
+        <div class="rc"><div class="rc-lbl">Most Likely</div><div class="rc-val" style="color:var(--amber)">${fmt(c.tot)}</div></div>
+        <div class="rc"><div class="rc-lbl">High (+20%)</div><div class="rc-val" style="color:var(--red)">${fmt(Math.round(c.tot*1.2))}</div></div>
+      </div>
+      ${c.tot>0&&totalSqft>0?`<div style="font-size:11px;color:var(--faint);text-align:right;margin-bottom:12px">Cost per sq ft: <strong style="color:var(--amber)">${fmt(Math.round(c.tot/totalSqft))}/sqft</strong></div>`:""}
+      ${st.projectNotes?`<div class="sec-lbl" style="margin-bottom:6px">Project Notes</div><div class="notes-box">${st.projectNotes}</div>`:""}
+      <div class="est-disclaimer"><strong>IMPORTANT NOTICE:</strong> This estimate is prepared based on information provided and represents anticipated costs at time of preparation. Final costs may vary due to unforeseen site conditions, material price changes, permit requirements, and scope changes. This document is not a contract. A formal signed contract should be executed before work commences.</div>
+      <div class="act-row no-print">
+        <button class="btn btn-ghost" onclick="window.print()">🖨️ Print</button>
+        <button class="btn btn-ghost" onclick="saveEstimateToDevice()">💾 Save</button>
+        <button class="btn btn-ghost" onclick="emailEstimate()">✉️ Email</button>
+        <button class="btn btn-ghost" onclick="doCopy()">📋 Copy</button>
+        <button class="btn btn-ghost" onclick="doSave()">⬇️ JSON</button>
+        <button class="btn btn-danger" style="margin-left:auto" onclick="doClear()">↺ New</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function doPrint(){
+  // When running as installed PWA, window.print() screenshots instead of printing
+  // Open in Safari/browser for proper PDF printing
+  const isStandalone=window.matchMedia("(display-mode:standalone)").matches||window.navigator.standalone===true;
+  if(isStandalone){
+    // Build a clean print-only HTML page and open it
+    const c=calc();
+    const loc=c.loc;const mx=loc.mx;const pct=Math.round((loc.mx-1)*100);const dir=pct>=0?"+":"";
+    const scope=SCOPES.find(s=>s.id===st.scope)?.label||"—";
+    const expiryDate=new Date();expiryDate.setDate(expiryDate.getDate()+30);
+    const expiryStr=expiryDate.toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"});
+    let totalSqft=0;rooms.forEach(r=>{for(let i=0;i<r.qty;i++)totalSqft+=parseFloat(roomSizes[szKey(r.key,i)])||r.defaultSqft;});baths.forEach(b=>{for(let i=0;i<b.qty;i++)totalSqft+=parseFloat(bathSizes[szKey(b.key,i)])||b.defaultSqft;});
+    let itemLines=[];
+    rooms.forEach(rDef=>{for(let inst=0;inst<rDef.qty;inst++){const sqft=parseFloat(roomSizes[szKey(rDef.key,inst)])||0;const il=rDef.qty>1?` #${inst+1}`:"";rDef.items.forEach(item=>{const k=ciKey(rDef.key,inst,item.key);if(checkedItems[k]){const cost=getItemCost(item,sqft,rDef.defaultSqft,mx,"or_"+k);const sn=sqft>0&&item.scaled?` (${sqft} sqft)`:"";itemLines.push({label:`${rDef.label}${il} — ${item.label}${sn}`,cost,overridden:!!(st.priceOverrides["or_"+k]&&st.priceOverrides["or_"+k]!=="")});}});}});
+    baths.forEach(bDef=>{for(let inst=0;inst<bDef.qty;inst++){const sqft=parseFloat(bathSizes[szKey(bDef.key,inst)])||0;const il=bDef.qty>1?` #${inst+1}`:"";bDef.items.forEach(item=>{const k=bathKey(bDef.key,inst,item.key);if(checkedItems[k]){const cost=getItemCost(item,sqft,bDef.defaultSqft,mx,"or_"+k);const sn=sqft>0&&item.scaled?` (${sqft} sqft)`:"";itemLines.push({label:`${bDef.label}${il} — ${item.label}${sn}`,cost,overridden:!!(st.priceOverrides["or_"+k]&&st.priceOverrides["or_"+k]!=="")});}});}});
+    if(st.otherItems.includes("lawn")){const lawnC=getLawnCost(mx);const condLabels={touchup:"Touch-Up & Maintenance",enhancement:"Enhancement & Refresh",new:"New Installation",major:"Restoration & Major Renovation"};const sqft=parseFloat(st.lawnSqft)||0;itemLines.unshift({label:`Lawn / Landscaping — ${condLabels[st.lawnCondition||"enhancement"]}${sqft?" ("+sqft.toLocaleString()+" sqft)":""}`,cost:lawnC,overridden:false});}
+    const bars=[{l:"Room Work Items",v:c.rT,col:"#2563eb"},{l:"Bathrooms",v:c.bT,col:"#0891b2"},{l:"Other / Exterior",v:c.oT,col:"#7c3aed"},{l:"Labor",v:c.lab,col:"#16a34a"},{l:"Equipment",v:c.equ,col:"#6d28d9"},{l:"Appliances",v:c.apps,col:"#d97706"},{l:`HVAC (${st.hvacSpecs.units}× ${st.hvacSpecs.tons}T ${st.hvacSpecs.seer}SEER)`,v:c.hvac,col:"#0284c7"},{l:"Permit Fees",v:c.permit,col:"#65a30d"},{l:"Custom",v:c.custom,col:"#ea580c"},{l:"Margin",v:c.margin,col:"#dc2626"},{l:"Contingency",v:c.contingency,col:"#e11d48"},{l:"Tax",v:c.tax,col:"#f97316"}].filter(b=>b.v>0);
+    const tot=c.tot||1;
+    const printHTML=`<!DOCTYPE html><html><head><meta charset="UTF-8"/><title>Estimate ${st.estimateNum}</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#fff;color:#111;padding:20px;font-size:12px}
+.cover{background:#f8f7ff;border:1px solid #ddd;border-radius:8px;padding:16px;margin-bottom:16px}
+.cover-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.co-name{font-size:18px;font-weight:800;color:#d97706}
+.est-num{font-size:10px;color:#666;text-align:right}
+.est-num strong{font-size:14px;color:#d97706;display:block}
+.parties{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding-top:10px;border-top:1px solid #ddd}
+.party-lbl{font-size:9px;color:#999;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.party-val{font-size:13px;font-weight:600}
+.party-sub{font-size:11px;color:#555}
+.section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#888;margin:14px 0 6px}
+.adj-box{display:flex;justify-content:space-between;align-items:center;background:#fff8e7;border:1px solid #f5d68a;border-radius:6px;padding:8px 12px;margin-bottom:10px}
+.adj-pct{font-size:16px;font-weight:700;color:${pct>0?"#d97706":pct<0?"#16a34a":"#666"}}
+.item-table{width:100%;border-collapse:collapse;margin-bottom:14px}
+.item-table td{padding:5px 8px;border-bottom:1px solid #f0f0f0;font-size:11px}
+.item-table td:last-child{text-align:right;font-weight:600;white-space:nowrap}
+.item-table tr:nth-child(even) td{background:#fafafa}
+.override-tag{font-size:8px;color:#d97706;font-weight:700;margin-left:4px}
+.bar-row{margin-bottom:7px}
+.bar-top{display:flex;justify-content:space-between;margin-bottom:2px;font-size:11px}
+.bar-track{height:5px;background:#eee;border-radius:3px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+.subtotal-table{width:100%;border-collapse:collapse;margin:10px 0;border:1px solid #eee;border-radius:6px;overflow:hidden}
+.subtotal-table td{padding:6px 10px;font-size:11px;border-bottom:1px solid #f0f0f0}
+.subtotal-table td:last-child{text-align:right;font-weight:600}
+.subtotal-table tr:last-child td{border-bottom:none;font-weight:700;font-size:13px;background:#fff8e7}
+.total-box{background:#fff8e7;border:2px solid #f59e0b;border-radius:8px;padding:14px;display:flex;justify-content:space-between;align-items:center;margin:14px 0;print-color-adjust:exact;-webkit-print-color-adjust:exact}
+.total-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:#666}
+.total-sub{font-size:10px;color:#999;margin-top:2px}
+.total-val{font-size:28px;font-weight:900;color:#d97706}
+.range-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px}
+.rc{background:#f9f9f9;border:1px solid #eee;border-radius:6px;padding:8px 10px}
+.rc-lbl{font-size:9px;color:#999;text-transform:uppercase;letter-spacing:.06em}
+.rc-val{font-size:14px;font-weight:700;margin-top:3px}
+.notes-box{background:#f9f9f9;border:1px solid #eee;border-radius:6px;padding:10px;font-size:11px;color:#555;line-height:1.6;white-space:pre-wrap;margin-bottom:12px}
+.disclaimer{font-size:9px;color:#999;line-height:1.6;padding:10px;background:#f9f9f9;border-radius:6px;border:1px solid #eee}
+.validity{font-size:10px;color:#16a34a;font-weight:600;margin-bottom:10px}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:12px}
+.tile{background:#f9f9f9;border:1px solid #eee;border-radius:6px;padding:7px 10px}
+.tile-lbl{font-size:9px;color:#999;text-transform:uppercase;letter-spacing:.06em}
+.tile-val{font-size:12px;font-weight:700;margin-top:2px}
+@media print{body{padding:10px}.total-box,.adj-box{print-color-adjust:exact;-webkit-print-color-adjust:exact}.bar-fill{print-color-adjust:exact;-webkit-print-color-adjust:exact}}
+</style></head><body>
+<div class="cover">
+  <div class="cover-top">
+    <div><div class="co-name">${st.contractorName||"RenovateIQ Pro"}</div><div style="font-size:11px;color:#666">${st.contractorPhone||""}${st.contractorLicense?" · Lic: "+st.contractorLicense:""}</div></div>
+    <div class="est-num"><span>ESTIMATE #</span><strong>${st.estimateNum}</strong><div>Issued: ${st.createdDate}</div><div>Valid until: ${expiryStr}</div></div>
+  </div>
+  <div class="parties">
+    <div><div class="party-lbl">Prepared For</div><div class="party-val">${st.clientName||"—"}</div>${st.clientEmail?`<div class="party-sub">${st.clientEmail}</div>`:""} ${st.clientPhone?`<div class="party-sub">${st.clientPhone}</div>`:""}</div>
+    <div><div class="party-lbl">Project</div><div class="party-val">${st.projectName||scope+" Renovation"}</div><div class="party-sub">${st.addr||"—"}</div><div class="party-sub" style="color:#d97706">📍 ${loc.label}</div></div>
+  </div>
+</div>
+<div class="validity">✅ Valid for 30 days — expires ${expiryStr}</div>
+<div class="tiles">
+  <div class="tile"><div class="tile-lbl">Scope</div><div class="tile-val">${scope}</div></div>
+  <div class="tile"><div class="tile-lbl">Quality</div><div class="tile-val" style="text-transform:capitalize">${st.qual}</div></div>
+  <div class="tile"><div class="tile-lbl">Total Area</div><div class="tile-val">${totalSqft.toLocaleString()} sqft</div></div>
+  <div class="tile"><div class="tile-lbl">Line Items</div><div class="tile-val">${itemLines.length}</div></div>
+  <div class="tile"><div class="tile-lbl">Contingency</div><div class="tile-val">${st.contingencyPct}%</div></div>
+  <div class="tile"><div class="tile-lbl">Location Adj.</div><div class="tile-val">${dir}${pct}%</div></div>
+</div>
+<div class="adj-box"><div><div class="section-title" style="margin:0 0 2px">Location Adjustment</div><div style="font-size:11px">📍 ${loc.label}</div></div><div class="adj-pct">${dir}${pct}%</div></div>
+${itemLines.length>0?`<div class="section-title">Itemized Scope of Work</div><table class="item-table">${itemLines.map(l=>`<tr><td>${l.label}${l.overridden?'<span class="override-tag">★ OVERRIDE</span>':""}</td><td>$${l.cost.toLocaleString()}</td></tr>`).join("")}</table>`:""}
+<div class="section-title">Cost Breakdown</div>
+${bars.map(b=>`<div class="bar-row"><div class="bar-top"><span>${b.l}</span><span style="font-weight:700;color:${b.col}">$${b.v.toLocaleString()}</span></div><div class="bar-track"><div class="bar-fill" style="width:${Math.round(b.v/tot*100)}%;background:${b.col}"></div></div></div>`).join("")}
+<table class="subtotal-table">
+  ${c.base>0?`<tr><td>Materials & Labor Base</td><td>$${(c.base+c.lab+c.equ).toLocaleString()}</td></tr>`:""}
+  ${c.apps>0?`<tr><td>Appliances</td><td>$${c.apps.toLocaleString()}</td></tr>`:""}
+  ${c.hvac>0?`<tr><td>HVAC</td><td>$${c.hvac.toLocaleString()}</td></tr>`:""}
+  ${c.permit>0?`<tr><td>Estimated Permit Fees</td><td>$${c.permit.toLocaleString()}</td></tr>`:""}
+  ${c.custom>0?`<tr><td>${st.customLine.label||"Custom"}</td><td>$${c.custom.toLocaleString()}</td></tr>`:""}
+  ${c.margin>0?`<tr><td>Contractor Margin</td><td>$${c.margin.toLocaleString()}</td></tr>`:""}
+  <tr><td>Subtotal</td><td>$${c.subtotal.toLocaleString()}</td></tr>
+  ${c.contingency>0?`<tr><td>Contingency Reserve (${st.contingencyPct}%)</td><td style="color:#dc2626">$${c.contingency.toLocaleString()}</td></tr>`:""}
+  ${c.tax>0?`<tr><td>Sales Tax (${st.taxRate}%)</td><td>$${c.tax.toLocaleString()}</td></tr>`:""}
+  <tr><td><strong>TOTAL ESTIMATE</strong></td><td style="color:#d97706;font-size:16px">$${c.tot.toLocaleString()}</td></tr>
+</table>
+<div class="total-box"><div><div class="total-lbl">Total Project Estimate</div><div class="total-sub">Includes labor, materials, margin${c.contingency>0?", contingency":""}${c.tax>0?", tax":""}</div></div><div class="total-val">$${c.tot.toLocaleString()}</div></div>
+<div class="range-grid">
+  <div class="rc"><div class="rc-lbl">Low (−15%)</div><div class="rc-val" style="color:#16a34a">$${Math.round(c.tot*.85).toLocaleString()}</div></div>
+  <div class="rc"><div class="rc-lbl">Most Likely</div><div class="rc-val" style="color:#d97706">$${c.tot.toLocaleString()}</div></div>
+  <div class="rc"><div class="rc-lbl">High (+20%)</div><div class="rc-val" style="color:#dc2626">$${Math.round(c.tot*1.2).toLocaleString()}</div></div>
+</div>
+${totalSqft>0?`<div style="text-align:right;font-size:11px;color:#999;margin-bottom:12px">Cost per sq ft: <strong style="color:#d97706">$${Math.round(c.tot/totalSqft).toLocaleString()}/sqft</strong></div>`:""}
+${st.projectNotes?`<div class="section-title">Project Notes</div><div class="notes-box">${st.projectNotes}</div>`:""}
+<div class="disclaimer"><strong>IMPORTANT NOTICE:</strong> This estimate is prepared based on information provided and represents anticipated costs at time of preparation. Final costs may vary due to unforeseen site conditions, material price changes, permit requirements, and scope changes. This document is not a contract. A formal signed contract should be executed before work commences.</div>
+</body></html>`;
+    const w=window.open("","_blank");
+    if(w){w.document.write(printHTML);w.document.close();setTimeout(()=>w.print(),500);}
+    else{alert("Please allow popups for this site, then tap Print again.");}
+    return;
+  }
+  window.print();
+}
+function doNewEstNum(){st.estimateNum=genEstNum();renderEst(calc());document.getElementById("he-num").textContent=st.estimateNum;}
+function doSave(){
+  const c=calc();
+  const a=document.createElement("a");
+  a.href="data:application/json,"+encodeURIComponent(JSON.stringify({estimateNum:st.estimateNum,date:st.createdDate,projectName:st.projectName,clientName:st.clientName,address:st.addr,location:c.loc.label,scope:st.scope,quality:st.qual,notes:st.projectNotes,costs:c},null,2));
+  a.download=`${st.estimateNum}.json`;a.click();
+}
+function doCopy(){
+  const c=calc();const mx=c.loc.mx;
+  let lines=`${st.contractorName||"RenovateIQ PRO"}\nESTIMATE ${st.estimateNum}\n${"=".repeat(40)}\nProject: ${st.projectName||"Renovation"}\nClient:  ${st.clientName||"—"}\nAddress: ${st.addr}\nDate:    ${st.createdDate}\nValid:   30 days\n\nITEMIZED SCOPE\n${"-".repeat(40)}\n`;
+  rooms.forEach(rDef=>{for(let inst=0;inst<rDef.qty;inst++){const sqft=parseFloat(roomSizes[szKey(rDef.key,inst)])||0;const il=rDef.qty>1?` #${inst+1}`:"";rDef.items.forEach(item=>{const k=ciKey(rDef.key,inst,item.key);if(checkedItems[k]){lines+=`  ${rDef.label}${il} — ${item.label}${sqft?" ("+sqft+" sqft)":""}: ${fmt(getItemCost(item,sqft,rDef.defaultSqft,mx))}\n`;}});}});
+  baths.forEach(bDef=>{for(let inst=0;inst<bDef.qty;inst++){const sqft=parseFloat(bathSizes[szKey(bDef.key,inst)])||0;const il=bDef.qty>1?` #${inst+1}`:"";bDef.items.forEach(item=>{const k=bathKey(bDef.key,inst,item.key);if(checkedItems[k]){lines+=`  ${bDef.label}${il} — ${item.label}${sqft?" ("+sqft+" sqft)":""}: ${fmt(getItemCost(item,sqft,bDef.defaultSqft,mx))}\n`;}});}});
+  lines+=`\nSUMMARY\n${"=".repeat(40)}\nTotal Estimate: ${fmt(c.tot)}\nLow: ${fmt(Math.round(c.tot*.85))}\nHigh: ${fmt(Math.round(c.tot*1.2))}`;
+  navigator.clipboard.writeText(lines).then(()=>alert("Copied!"));
+}
+function doClear(){
+  rooms=JSON.parse(JSON.stringify(ROOM_DEFS));baths=JSON.parse(JSON.stringify(BATH_DEFS));
+  checkedItems={};roomSizes={};bathSizes={};
+  st={step:1,projectName:"",clientName:"",clientEmail:"",clientPhone:"",contractorName:"",contractorPhone:"",contractorLicense:"",projectNotes:"",addr:"",scope:null,otherItems:[],layout:null,layItems:[],qual:"average",apps:[],hvac:[],mtype:"pct",margin:20,contingencyPct:10,includeTax:false,taxRate:8,includePermits:true,files:[],customLine:{enabled:false,label:"Custom Item",amount:""},priceOverrides:{},marginOverride:"",lawnSqft:"",lawnCondition:"enhancement",hvacSpecs:{type:"central_ac",tons:2.5,seer:16,brand:"standard",ductwork:"existing",units:1},windowSpecs:{type:"double_hung",size:"standard",glazing:"double",frame:"vinyl",count:1},roofSpecs:{material:"asphalt_3tab",squares:20,layers:1,pitch:"standard"},counterSpecs:{material:"granite",linearFt:20,edgeProfile:"standard"},electricalSpecs:{panelAmps:0,circuits:0,evCharger:false,generatorHookup:false},estimateNum:genEstNum(),createdDate:new Date().toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"})};
+  document.getElementById("header-est").style.display="none";
+  renderStepper();renderAll();document.getElementById("estimate").style.display="none";
+}
+
+// ── HVAC PREVIEW UPDATER ─────────────────────────────────────────────────────
+function updateHvacPreview(){
+  const el=document.getElementById("hvac-cost-preview");
+  if(!el)return;
+  if(st.hvac.includes("No HVAC Work")||!st.hvac.length){
+    el.innerHTML=`<div style="font-size:12px;color:var(--faint)">Select HVAC work above to see spec-based pricing</div>`;
+    return;
+  }
+  const loc=getLoc(st.addr);const mx=loc.mx;const s=st.hvacSpecs;
+  const cost=calcHvacSpecCost(mx);
+  const typeLabels={central_ac:"Central AC / Split System",heat_pump:"Heat Pump",mini_split:"Mini-Split / Ductless",furnace:"Gas Furnace",package_unit:"Package Unit"};
+  const brandLabels={standard:"Standard / Generic",goodman:"Goodman",rheem:"Rheem",carrier:"Carrier",trane:"Trane",lennox:"Lennox"};
+  const ductLabels={existing:"Existing ductwork (reused)",partial:"Partial ductwork replacement",new:"All-new ductwork installation"};
+  // Per-unit breakdown
+  const BASE_PER_TON={central_ac:{b:600,a:900,l:1400},heat_pump:{b:700,a:1100,l:1800},mini_split:{b:900,a:1400,l:2200},furnace:{b:500,a:800,l:1400},package_unit:{b:800,a:1200,l:1900}};
+  const SEER_MULT={14:1.0,16:1.12,18:1.28,20:1.45,22:1.65};
+  const BRAND_MULT={standard:1.0,goodman:0.9,rheem:1.0,carrier:1.18,trane:1.22,lennox:1.28};
+  const DUCT_ADD={existing:0,partial:1200,new:3500};
+  const q=qk();
+  const bpt=(BASE_PER_TON[s.type]||BASE_PER_TON.central_ac)[q];
+  const equipCost=Math.round(bpt*s.tons*(SEER_MULT[s.seer]||1.0)*(BRAND_MULT[s.brand]||1.0)*mx);
+  const laborCost=Math.round(equipCost*0.45);
+  const ductCost=Math.round((DUCT_ADD[s.ductwork]||0)*mx);
+  const perUnit=equipCost+laborCost+ductCost;
+  el.innerHTML=`
+    <div style="font-size:11px;font-weight:700;color:var(--cyan);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px">💰 Cost Estimate Based on Specs</div>
+    <div style="background:var(--surface);border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:12px;line-height:1.8">
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Unit type</span><span style="font-weight:600">${typeLabels[s.type]||s.type}</span></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Brand</span><span style="font-weight:600">${brandLabels[s.brand]||s.brand}</span></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Capacity</span><span style="font-weight:600">${s.tons} Ton</span></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Efficiency</span><span style="font-weight:600">${s.seer} SEER</span></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Ductwork</span><span style="font-weight:600">${ductLabels[s.ductwork]||s.ductwork}</span></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Quantity</span><span style="font-weight:600">${s.units} unit${s.units>1?"s":""}</span></div>
+    </div>
+    <div style="background:var(--surface);border-radius:8px;padding:10px 12px;margin-bottom:10px;font-size:12px;line-height:1.8">
+      <div style="font-size:10px;font-weight:700;color:var(--faint);text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">Per Unit Breakdown</div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Equipment</span><span>${fmt(equipCost)}</span></div>
+      <div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Labor (installation)</span><span>${fmt(laborCost)}</span></div>
+      ${ductCost>0?`<div style="display:flex;justify-content:space-between"><span style="color:var(--muted)">Ductwork</span><span>${fmt(ductCost)}</span></div>`:""}
+      <div style="display:flex;justify-content:space-between;font-weight:700;border-top:0.5px solid var(--border);padding-top:4px;margin-top:4px"><span>Per unit subtotal</span><span style="color:var(--cyan)">${fmt(perUnit)}</span></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:rgba(6,182,212,.1);border-radius:8px">
+      <div><div style="font-size:10px;color:var(--faint);text-transform:uppercase;letter-spacing:.06em">Total HVAC Estimate</div><div style="font-size:10px;color:var(--faint)">${s.units} unit${s.units>1?"s":""} × ${fmt(perUnit)} + extras</div></div>
+      <div style="font-size:24px;font-weight:800;color:var(--cyan)">${fmt(cost)}</div>
+    </div>
+    <div style="font-size:10px;color:var(--faint);margin-top:8px;line-height:1.5">Location adjustment applied: ${loc.label} · Use the contractor override in Step 3 to enter your actual quote.</div>`;
+}
+
+
+// ── AI NOTES PARSER ───────────────────────────────────────────────────────────
+function parseNotesWithAI(){
+  const notes=st.projectNotes.trim();
+  if(!notes){alert("Please enter project notes first.");return;}
+  const btn=document.getElementById("parse-btn");
+  const resultEl=document.getElementById("parse-result");
+  if(!btn||!resultEl)return;
+  btn.textContent="🔍 Analyzing...";btn.disabled=true;
+  resultEl.style.display="block";
+  resultEl.style.background="var(--surface)";
+  resultEl.style.color="var(--muted)";
+  resultEl.textContent="Reading your notes and extracting specifications...";
+
+  setTimeout(()=>{
+    try{
+      const applied=[];
+      const n=notes.toLowerCase();
+
+      // ── SMART SQ FOOTAGE HELPER ───────────────────────────────────────────────
+      // Recognizes: 1700 sqft, 1700 sq ft, 1700 sq foot, 1700 square feet, 1,700 sqft
+      function extractSqft(text){
+        const m=text.match(/(\d[\d,]*)\s*(?:sq\.?\s*ft|sq\.?\s*foot|square\s*f(?:eet|oot|t)|sqft)/i);
+        if(m)return parseInt(m[1].replace(/,/g,""));
+        return null;
+      }
+      // Extract a number before a keyword
+      function numBefore(keyword){
+        const m=notes.match(new RegExp("(\\\\d+)\\\\s*"+keyword,"i"));
+        return m?parseInt(m[1]):null;
+      }
+      // Word numbers
+      const WORD_NUMS={one:1,two:2,three:3,four:4,five:5,six:6,seven:7,eight:8,nine:9,ten:10,eleven:11,twelve:12,fifteen:15,twenty:20};
+      function wordNum(text){
+        const m=text.match(/\b(one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|fifteen|twenty)\b/i);
+        return m?WORD_NUMS[m[1].toLowerCase()]:null;
+      }
+
+      // ── HVAC ──────────────────────────────────────────────────────────────────
+      const hasHvac=/(ac|a\/c|hvac|air.?cond|heat.?pump|mini.?split|ductless|furnace|boiler|cooling unit|heating unit)/i.test(notes);
+      if(hasHvac){
+        const hasReplace=/(replac|swap|change out|upgrad)/i.test(notes);
+        const hasNew=/(new |install|brand.?new)/i.test(notes);
+        if(hasReplace&&!hasNew){
+          if(!st.hvac.includes("Replace Existing System")){st.hvac=["Replace Existing System"];applied.push("HVAC: Replace Existing System");}
+        } else {
+          if(!st.hvac.includes("New HVAC System")){st.hvac=["New HVAC System"];applied.push("HVAC: New HVAC System");}
+        }
+        // Units
+        let units=1;
+        const m1=notes.match(/(\d+)\s*(?:ac |a\/c|hvac|unit)/i);
+        const m2=notes.match(/(\d+)\s+(?:ac|a\/c|hvac|air|unit|cooling|heating)/i);
+        const mw=wordNum(notes);
+        if(m1)units=parseInt(m1[1]);
+        else if(m2)units=parseInt(m2[1]);
+        else if(mw&&mw<=10)units=mw;
+        if(units!==st.hvacSpecs.units){st.hvacSpecs.units=units;applied.push(`HVAC: ${units} unit${units>1?"s":""}`);}
+        // Tonnage
+        const tonM=notes.match(/(\d+\.?\d*)\s*[-]?\s*ton/i);
+        if(tonM){const t=parseFloat(tonM[1]);const vt=[1.5,2,2.5,3,3.5,4,5];const c=vt.reduce((a,b)=>Math.abs(b-t)<Math.abs(a-t)?b:a);if(c!==st.hvacSpecs.tons){st.hvacSpecs.tons=c;applied.push(`HVAC: ${c} Ton`);}}
+        // SEER
+        const seerM=notes.match(/(\d+)\s*[-]?\s*seer|seer\s*[-]?\s*(\d+)/i);
+        if(seerM){const s=parseInt(seerM[1]||seerM[2]);const vs=[14,16,18,20,22];const c=vs.reduce((a,b)=>Math.abs(b-s)<Math.abs(a-s)?b:a);if(c!==st.hvacSpecs.seer){st.hvacSpecs.seer=c;applied.push(`HVAC: ${c} SEER`);}}
+        // Brand
+        const brands={carrier:"carrier",trane:"trane",lennox:"lennox",rheem:"rheem",goodman:"goodman",york:"standard",ruud:"rheem",bryant:"carrier",american:"standard"};
+        for(const[b,mapped] of Object.entries(brands)){if(n.includes(b)&&mapped!==st.hvacSpecs.brand){st.hvacSpecs.brand=mapped;applied.push(`HVAC: ${b.charAt(0).toUpperCase()+b.slice(1)} brand`);break;}}
+        // Type
+        if(/mini.?split|ductless/i.test(notes))st.hvacSpecs.type="mini_split";
+        else if(/heat.?pump/i.test(notes))st.hvacSpecs.type="heat_pump";
+        else if(/furnace|boiler/i.test(notes))st.hvacSpecs.type="furnace";
+        else if(/package/i.test(notes))st.hvacSpecs.type="package_unit";
+        else st.hvacSpecs.type="central_ac";
+        // Ductwork
+        if(/new duct|replac.*duct|all.*duct/i.test(notes)&&st.hvacSpecs.ductwork!=="new"){st.hvacSpecs.ductwork="new";applied.push("HVAC: New ductwork");}
+        else if(/partial.*duct/i.test(notes)&&st.hvacSpecs.ductwork!=="partial"){st.hvacSpecs.ductwork="partial";applied.push("HVAC: Partial ductwork");}
+      }
+
+      // ── DRIVEWAY / PAVING ─────────────────────────────────────────────────────
+      if(/(driveway|pavement|paving|asphalt|concrete.?drive|mill.?and|overlay|blacktop|macadam|tarmac)/i.test(notes)){
+        if(!st.otherItems.includes("driveway")){st.otherItems.push("driveway");applied.push("Added: Driveway / Paving");}
+        const sqft=extractSqft(notes);
+        if(sqft){st.drivewaySpecs={sqft,type:"asphalt"};applied.push(`Driveway: ${sqft.toLocaleString()} sqft`);}
+        if(/mill/i.test(notes))applied.push("Driveway: Mill & overlay scope noted");
+        if(/concrete/i.test(notes))applied.push("Driveway: Concrete surface noted");
+        if(/paver|brick.?paver|travertine/i.test(notes))applied.push("Driveway: Paver surface noted");
+        if(/asphalt|blacktop|macadam/i.test(notes))applied.push("Driveway: Asphalt surface noted");
+      }
+
+      // ── RETAINING WALL / GRADING / DRAINAGE ──────────────────────────────────
+      if(/(retaining wall|retention wall)/i.test(notes)){
+        if(!st.otherItems.includes("retaining_wall")){st.otherItems.push("retaining_wall");applied.push("Added: Retaining Wall");}
+        const lf=notes.match(/(\d+)\s*(?:linear\s*ft|lf|lin\.?\s*ft|feet|foot)/i);
+        if(lf)applied.push(`Retaining wall: ${lf[1]} linear ft noted`);
+      }
+      if(/(grading|regrading|re-grading|land.?grad|site.?grad|slope)/i.test(notes)){
+        if(!st.otherItems.includes("grading")){st.otherItems.push("grading");applied.push("Added: Grading / Site Work");}
+      }
+      if(/(drainage|french drain|catch basin|storm drain|dry well|sump|water.?manag)/i.test(notes)){
+        if(!st.otherItems.includes("drainage")){st.otherItems.push("drainage");applied.push("Added: Drainage System");}
+      }
+
+      // ── ROOFING ───────────────────────────────────────────────────────────────
+      if(/(roof|shingle|tile roof|metal roof|flat roof|re-roof|reroof|fascia|soffit|gutter)/i.test(notes)){
+        if(!st.otherItems.includes("roof")){st.otherItems.push("roof");applied.push("Added: Roof / Exterior");}
+        const sqft=extractSqft(notes);
+        if(sqft)applied.push(`Roof: ${sqft.toLocaleString()} sqft noted`);
+        const squares=notes.match(/(\d+)\s*square/i);
+        if(squares)applied.push(`Roof: ${squares[1]} squares noted`);
+      }
+
+      // ── WINDOWS ───────────────────────────────────────────────────────────────
+      if(/window/i.test(notes)){
+        if(!st.otherItems.includes("windows_all")){st.otherItems.push("windows_all");applied.push("Added: Window Replacement");}
+        const wn=notes.match(/(\d+)\s*window/i)||[null,null];
+        const ww=wordNum(notes);
+        if(wn[1])applied.push(`Windows: ${wn[1]} units noted`);
+        else if(ww)applied.push(`Windows: ${ww} units noted`);
+      }
+
+      // ── SIDING / EXTERIOR ─────────────────────────────────────────────────────
+      if(/(siding|vinyl siding|hardie|hardiboard|stucco|eifs|clapboard|wood siding)/i.test(notes)){
+        if(!st.otherItems.includes("siding")){st.otherItems.push("siding");applied.push("Added: Siding Replacement");}
+        const sqft=extractSqft(notes);
+        if(sqft)applied.push(`Siding: ${sqft.toLocaleString()} sqft noted`);
+      }
+
+      // ── DECK / PATIO / FENCE ──────────────────────────────────────────────────
+      if(/(deck|patio|pergola|gazebo|porch|sunroom)/i.test(notes)){
+        if(!st.otherItems.includes("deck")){st.otherItems.push("deck");applied.push("Added: Deck / Patio");}
+        const sqft=extractSqft(notes);
+        if(sqft)applied.push(`Deck/Patio: ${sqft.toLocaleString()} sqft noted`);
+      }
+      if(/(fence|fencing|privacy fence|vinyl fence|wood fence|chain link)/i.test(notes)){
+        if(!st.otherItems.includes("fence")){st.otherItems.push("fence");applied.push("Added: Fence");}
+        const lf=notes.match(/(\d[\d,]*)\s*(?:linear\s*ft|lf|lin\.?\s*ft|feet|foot|ft)/i);
+        if(lf)applied.push(`Fence: ${lf[1]} ft noted`);
+      }
+
+      // ── LAWN / LANDSCAPING ────────────────────────────────────────────────────
+      if(/(lawn|landscap|sod|grass seed|turf|garden bed|mulch|shrub|tree planting|yard)/i.test(notes)){
+        if(!st.otherItems.includes("lawn")){st.otherItems.push("lawn");applied.push("Added: Lawn / Landscaping");}
+        const sqft=extractSqft(notes);
+        if(sqft){st.lawnSqft=String(sqft);applied.push(`Lawn: ${sqft.toLocaleString()} sqft`);}
+        if(/new sod|install sod|new lawn/i.test(notes)){st.lawnCondition="new";applied.push("Lawn: New Installation");}
+        else if(/major|reno|overhaul|complet/i.test(notes)){st.lawnCondition="major";applied.push("Lawn: Major Renovation");}
+        else if(/touch.?up|maintain|routine|mow/i.test(notes)){st.lawnCondition="touchup";applied.push("Lawn: Touch-Up & Maintenance");}
+        else{st.lawnCondition="enhancement";}
+      }
+
+      // ── POOL / SPA ────────────────────────────────────────────────────────────
+      if(/(pool|swimming pool|hot tub|jacuzzi|spa)/i.test(notes)){
+        applied.push("⚠️ Pool/Spa noted — add as custom line item in Step 8");
+      }
+
+      // ── KITCHEN ───────────────────────────────────────────────────────────────
+      if(/(kitchen|cabinet|countertop|counter top|backsplash|kitchen island|galley)/i.test(notes)){
+        const kr=rooms.find(r=>r.key==="kitchen");
+        if(kr&&kr.qty===0){kr.qty=1;kr.open=true;applied.push("Added: 1 Kitchen");}
+        const items={cabinets:/cabinet/i,cab_reface:/reface/i,countertop_gq:/countertop|quartz|granite|marble counter/i,backsplash:/backsplash/i,island:/island/i,sink:/sink/i};
+        for(const[key,rx] of Object.entries(items)){
+          if(rx.test(notes)){const ck=ciKey("kitchen",0,key);if(!checkedItems[ck]){checkedItems[ck]=true;applied.push(`Kitchen: ${key.replace(/_/g," ")} selected`);}}
+        }
+      }
+
+      // ── FLOORING ──────────────────────────────────────────────────────────────
+      const floorMap=[
+        {keys:["floor_carpet"],terms:/(carpet|carpeting)/i},
+        {keys:["floor_hwood"],terms:/(hardwood|hard wood|wood floor|oak floor|maple floor|engineered wood)/i},
+        {keys:["floor_refin"],terms:/(refinish|re-finish|sand.?and.?finish|sand.?and.?stain)/i},
+        {keys:["floor_lvp"],terms:/(lvp|luxury vinyl|vinyl plank|vinyl floor)/i},
+        {keys:["floor_lam"],terms:/(laminate)/i},
+        {keys:["floor_tile"],terms:/(tile floor|floor tile|porcelain floor|ceramic floor)/i},
+      ];
+      floorMap.forEach(({keys,terms})=>{
+        if(terms.test(notes)){
+          let added=false;
+          rooms.forEach(r=>{if(r.qty>0){for(let i=0;i<r.qty;i++){const ck=ciKey(r.key,i,keys[0]);if(!checkedItems[ck]){checkedItems[ck]=true;added=true;}}}});
+          if(added)applied.push(`Flooring: ${keys[0].replace("floor_","")} applied to rooms`);
+          const sqft=extractSqft(notes);
+          if(sqft){rooms.forEach(r=>{if(r.qty>0){for(let i=0;i<r.qty;i++){roomSizes[szKey(r.key,i)]=String(sqft);}}}); applied.push(`Room size: ${sqft.toLocaleString()} sqft`);}
+        }
+      });
+
+      // ── PAINTING ──────────────────────────────────────────────────────────────
+      if(/(paint|painting|repaint|interior paint|exterior paint|prime and paint)/i.test(notes)){
+        let added=false;
+        rooms.forEach(r=>{if(r.qty>0){for(let i=0;i<r.qty;i++){const ck=ciKey(r.key,i,"paint");if(!checkedItems[ck]){checkedItems[ck]=true;added=true;}}}});
+        if(added)applied.push("Painting selected in open rooms");
+        if(/exterior paint/i.test(notes)&&!st.otherItems.includes("ext_paint")){st.otherItems.push("ext_paint");applied.push("Added: Exterior Painting");}
+      }
+
+      // ── BATHROOM ──────────────────────────────────────────────────────────────
+      if(/(bathroom|bath room|master bath|half bath|full bath|toilet|vanity|shower|tub|water closet|wc)/i.test(notes)){
+        let bathCount=1;
+        const bn=notes.match(/(\d+)\s*(?:bathroom|bath)/i);
+        const bw=wordNum(notes);
+        if(bn)bathCount=parseInt(bn[1]);
+        else if(bw&&bw<=6)bathCount=bw;
+        const btype=/master/i.test(notes)?"master":/half/i.test(notes)?"half":"full";
+        const bDef=baths.find(b=>b.key===btype);
+        if(bDef&&bDef.qty<bathCount){bDef.qty=bathCount;applied.push(`Added: ${bathCount}× ${btype} bathroom`);}
+        // Items
+        const bathItems={toilet:/toilet|water closet|wc/i,vanity:/vanity/i,tub_tile:/tub|bath tub/i,shower:/shower/i,floor_tile:/tile/i};
+        for(const[key,rx] of Object.entries(bathItems)){
+          if(rx.test(notes)){const bDef2=baths.find(b=>b.key===btype);if(bDef2&&bDef2.qty>0){const ck=bathKey(btype,0,key);if(!checkedItems[ck]){checkedItems[ck]=true;applied.push(`Bath: ${key} selected`);}}}
+        }
+      }
+
+      // ── BEDROOMS ──────────────────────────────────────────────────────────────
+      if(/bedroom|bed room|master bedroom/i.test(notes)){
+        let count=1;
+        const bn=notes.match(/(\d+)\s*(?:bedroom|bed room)/i);
+        const bw=wordNum(notes);
+        if(bn)count=parseInt(bn[1]);
+        else if(bw&&bw<=10)count=bw;
+        const bedroomDef=rooms.find(r=>r.key==="bedroom");
+        if(bedroomDef&&bedroomDef.qty<count){bedroomDef.qty=count;bedroomDef.open=true;applied.push(`Added: ${count} bedroom${count>1?"s":""}`);}
+      }
+
+      // ── ELECTRICAL ────────────────────────────────────────────────────────────
+      if(/(electrical panel|panel upgrade|200 amp|400 amp|service upgrade|rewire|new circuit|electric meter)/i.test(notes)){
+        if(!st.otherItems.includes("elec_panel")){st.otherItems.push("elec_panel");applied.push("Added: Electrical Panel Upgrade");}
+      }
+
+      // ── PLUMBING ──────────────────────────────────────────────────────────────
+      if(/(repipe|re-pipe|main line|water main|sewer line|plumbing rough|whole house plumb)/i.test(notes)){
+        if(!st.otherItems.includes("plumbing_main")){st.otherItems.push("plumbing_main");applied.push("Added: Main Plumbing / Repiping");}
+      }
+
+      // ── INSULATION ────────────────────────────────────────────────────────────
+      if(/(insulation|spray foam|blown in|attic insul|r-value|r value)/i.test(notes)){
+        if(!st.otherItems.includes("insulation")){st.otherItems.push("insulation");applied.push("Added: Insulation");}
+      }
+
+      // ── BASEMENT ──────────────────────────────────────────────────────────────
+      if(/(basement|finish basement|unfinished basement|basement reno)/i.test(notes)){
+        const baseDef=rooms.find(r=>r.key==="basement");
+        if(baseDef&&baseDef.qty===0){baseDef.qty=1;baseDef.open=true;applied.push("Added: Basement");}
+        const sqft=extractSqft(notes);
+        if(sqft){roomSizes[szKey("basement",0)]=String(sqft);applied.push(`Basement: ${sqft.toLocaleString()} sqft`);}
+      }
+
+      // ── GARAGE ────────────────────────────────────────────────────────────────
+      if(/(garage|garage door|epoxy floor|garage floor|garage reno)/i.test(notes)){
+        const garDef=rooms.find(r=>r.key==="garage");
+        if(garDef&&garDef.qty===0){garDef.qty=1;garDef.open=true;applied.push("Added: Garage");}
+        if(/garage door/i.test(notes)){const ck=ciKey("garage",0,"door_gar");if(!checkedItems[ck]){checkedItems[ck]=true;applied.push("Garage: Door replacement");}}
+        if(/epoxy/i.test(notes)){const ck=ciKey("garage",0,"floor_epoxy");if(!checkedItems[ck]){checkedItems[ck]=true;applied.push("Garage: Epoxy floor coating");}}
+        const sqft=extractSqft(notes);
+        if(sqft){roomSizes[szKey("garage",0)]=String(sqft);applied.push(`Garage: ${sqft.toLocaleString()} sqft`);}
+      }
+
+      // ── ACCESSIBILITY ─────────────────────────────────────────────────────────
+      if(/(wheelchair|ada|accessibility|ramp|grab bar|walk.?in shower|roll.?in shower)/i.test(notes)){
+        applied.push("♿ Accessibility work noted — verify items in room sections");
+      }
+
+      // ── SOLAR ─────────────────────────────────────────────────────────────────
+      if(/(solar|photovoltaic|pv panel|solar panel)/i.test(notes)){
+        applied.push("☀️ Solar installation noted — add as custom line item in Step 8");
+      }
+
+      // ── QUALITY ───────────────────────────────────────────────────────────────
+      if(/(luxury|premium|high.?end|top.?of.?line|high end|custom finish|designer|upscale)/i.test(notes)&&st.qual!=="luxury"){
+        st.qual="luxury";applied.push("Quality: Set to Premium / Luxury");
+      } else if(/(basic|budget|economy|cheapest|lowest cost|affordable)/i.test(notes)&&st.qual!=="basic"){
+        st.qual="basic";applied.push("Quality: Set to Basic / Economy");
+      }
+
+      // ── SCOPE AUTO-DETECT ─────────────────────────────────────────────────────
+      if(!st.scope){
+        const isExterior=/(driveway|roof|siding|fence|deck|patio|lawn|landscap|retaining|grading|drainage)/i.test(notes)&&!/(bedroom|bathroom|kitchen|living room|basement)/i.test(notes);
+        const isLawn=/(lawn|landscap|sod|grass|garden|yard)/i.test(notes)&&!/(driveway|roof|siding|fence|deck)/i.test(notes);
+        if(isLawn){st.scope="lawn";applied.push("Scope: Front Lawn auto-detected");}
+        else if(isExterior){st.scope="ext";applied.push("Scope: Exterior Upgrades auto-detected");}
+      }
+
+      // ── SHOW RESULTS ──────────────────────────────────────────────────────────
+      if(applied.length>0){
+        resultEl.style.background="rgba(34,197,94,.08)";
+        resultEl.style.borderColor="rgba(34,197,94,.3)";
+        resultEl.style.color="var(--text)";
+        resultEl.innerHTML=`
+          <div style="font-weight:700;color:var(--green);margin-bottom:8px">
+            ✅ ${applied.length} item${applied.length>1?"s":""} extracted:
+          </div>
+          ${applied.map(a=>`<div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:3px">
+            <span style="color:var(--amber);font-size:11px;margin-top:1px">▸</span>
+            <span style="font-size:12px">${a}</span>
+          </div>`).join("")}
+          <div style="margin-top:10px;padding:8px 12px;background:rgba(6,182,212,.08);border-radius:6px;font-size:11px;color:var(--cyan)">
+            💡 Specs applied — continue through steps to see updated pricing
+          </div>`;
+        st.parsedSpecSummary=applied;
+        renderAll();
+      } else {
+        resultEl.style.background="rgba(245,158,11,.08)";
+        resultEl.style.borderColor="rgba(245,158,11,.3)";
+        resultEl.innerHTML=`
+          <strong style="color:var(--amber)">⚠️ Nothing specific found in your notes.</strong><br>
+          <span style="font-size:11px;color:var(--faint)">
+          Supported: HVAC, driveway, roofing, windows, siding, deck, fence, lawn, retaining walls,
+          drainage, kitchen, bathroom, bedroom, basement, garage, flooring, painting, electrical, plumbing.<br><br>
+          Example: <em>"1700 sqft driveway mill and asphalt overlay, 2 Carrier 3.5 ton 16 SEER AC units"</em>
+          </span>`;
+      }
+      recalc();
+    }catch(err){
+      console.error("Parse error:",err);
+      resultEl.style.background="rgba(239,68,68,.08)";
+      resultEl.style.borderColor="rgba(239,68,68,.3)";
+      resultEl.innerHTML=`<strong style="color:var(--red)">❌ Parse error.</strong><br>${err.message}`;
+    }
+    btn.textContent="🤖 Extract from Notes";btn.disabled=false;
+  },400);
+}
+
+
+// ── VOICE RECOGNITION ─────────────────────────────────────────────────────────
+let voiceRecognition=null,isRecording=false;
+function toggleVoice(){
+  if(!('webkitSpeechRecognition' in window)&&!('SpeechRecognition' in window)){alert("Voice recognition not supported.\nTry Chrome or Safari.");return;}
+  if(isRecording){stopVoice();}else{startVoice();}
+}
+function startVoice(){
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  voiceRecognition=new SR();voiceRecognition.continuous=true;voiceRecognition.interimResults=true;voiceRecognition.lang='en-US';
+  const btn=document.getElementById("voice-btn");
+  const status=document.getElementById("voice-status");
+  const ta=document.getElementById("notes-ta");
+  const orig=st.projectNotes||"";
+  voiceRecognition.onstart=()=>{isRecording=true;if(btn)btn.classList.add("recording");if(status){status.textContent="🔴 Listening... tap mic to stop";status.style.color="var(--red)";}};
+  voiceRecognition.onresult=(e)=>{
+    let final_text=orig,interim="";
+    for(let i=e.resultIndex;i<e.results.length;i++){if(e.results[i].isFinal)final_text+=e.results[i][0].transcript+" ";else interim+=e.results[i][0].transcript;}
+    st.projectNotes=final_text;
+    if(ta)ta.value=final_text+(interim?"["+interim+"]":"");
+  };
+  voiceRecognition.onerror=(e)=>{stopVoice();if(status){status.textContent="Error: "+e.error;status.style.color="var(--red)";}};
+  voiceRecognition.onend=()=>stopVoice();
+  voiceRecognition.start();
+}
+function stopVoice(){
+  isRecording=false;
+  if(voiceRecognition){try{voiceRecognition.stop();}catch(e){}}
+  const btn=document.getElementById("voice-btn");const status=document.getElementById("voice-status");
+  if(btn)btn.classList.remove("recording");
+  if(status){status.textContent="AI reads your notes and auto-fills specs";status.style.color="";}
+  const ta=document.getElementById("notes-ta");
+  if(ta){st.projectNotes=ta.value.replace(/\[.*?\]/g,"").trim();ta.value=st.projectNotes;}
+}
+
+// ── SAVE / LOAD ESTIMATES ──────────────────────────────────────────────────────
+const STORAGE_KEY="renovateiq_estimates_v1";
+function getSavedEstimates(){try{const d=localStorage.getItem(STORAGE_KEY);return d?JSON.parse(d):[];}catch(e){return[];}}
+function saveEstimateToDevice(){
+  const c=calc();
+  if(c.tot===0){alert("Nothing to save — complete your estimate first.");return;}
+  const estimates=getSavedEstimates();
+  const entry={
+    id:"est_"+Date.now(),estimateNum:st.estimateNum,date:st.createdDate,
+    projectName:st.projectName||"Untitled Project",clientName:st.clientName||"",
+    addr:st.addr||"",scope:st.scope,qual:st.qual,total:c.tot,loc:c.loc.label,
+    snapshot:{st:JSON.parse(JSON.stringify(st)),roomSizes:JSON.parse(JSON.stringify(roomSizes)),
+      bathSizes:JSON.parse(JSON.stringify(bathSizes)),checkedItems:JSON.parse(JSON.stringify(checkedItems)),
+      rooms:JSON.parse(JSON.stringify(rooms)),baths:JSON.parse(JSON.stringify(baths)),costs:c}
+  };
+  estimates.unshift(entry);if(estimates.length>50)estimates.splice(50);
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(estimates));showToast("✅ Estimate saved!");}
+  catch(e){alert("Could not save — device storage may be full.");}
+}
+function loadEstimate(id){
+  const entry=getSavedEstimates().find(e=>e.id===id);
+  if(!entry){alert("Not found.");return;}
+  const s=entry.snapshot;
+  Object.assign(st,s.st);
+  Object.assign(roomSizes,s.roomSizes||{});Object.assign(bathSizes,s.bathSizes||{});
+  Object.assign(checkedItems,s.checkedItems||{});
+  if(s.rooms)rooms=JSON.parse(JSON.stringify(s.rooms));
+  if(s.baths)baths=JSON.parse(JSON.stringify(s.baths));
+  closeDashboard();setStep(9);showToast("📂 Estimate loaded!");
+}
+function deleteEstimate(id,e){
+  e.stopPropagation();if(!confirm("Delete this estimate?"))return;
+  const updated=getSavedEstimates().filter(x=>x.id!==id);
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(updated));}catch(err){}
+  renderDashboard();showToast("🗑️ Deleted");
+}
+function showDashboard(){document.getElementById("dashboard-modal").style.display="block";document.body.style.overflow="hidden";renderDashboard();}
+function closeDashboard(){document.getElementById("dashboard-modal").style.display="none";document.body.style.overflow="";}
+function renderDashboard(){
+  const list=document.getElementById("dashboard-list");
+  const sub=document.getElementById("dash-subtitle");
+  const estimates=getSavedEstimates();
+  if(sub)sub.textContent=estimates.length+" estimate"+(estimates.length!==1?"s":"")+" saved on this device";
+  if(!estimates.length){list.innerHTML='<div class="empty-state"><div class="empty-icon">📄</div><div class="empty-text">No saved estimates yet.<br>Complete an estimate and tap <strong>Save to Device</strong>.</div></div>';return;}
+  list.innerHTML=estimates.map(e=>`<div class="est-card-item" onclick="loadEstimate('${e.id}')"><div class="est-card-icon">🏗️</div><div class="est-card-info"><div class="est-card-name">${e.projectName||"Untitled"}</div><div class="est-card-meta">${e.estimateNum} · ${e.date}${e.clientName?" · "+e.clientName:""}${e.addr?" · "+e.addr.split(",")[0]:""}</div><div class="est-card-meta" style="color:var(--amber);margin-top:2px">${e.loc||""}</div></div><div style="text-align:right;flex-shrink:0"><div class="est-card-total">${e.total.toLocaleString("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0})}</div><div style="font-size:10px;color:var(--faint);margin-top:2px;text-transform:capitalize">${e.qual||""}</div></div><button class="est-card-del" onclick="deleteEstimate('${e.id}',event)" title="Delete">🗑️</button></div>`).join("");
+}
+
+// ── TOAST ──────────────────────────────────────────────────────────────────────
+function showToast(msg,dur=2500){
+  let t=document.getElementById("toast-msg");
+  if(!t){t=document.createElement("div");t.id="toast-msg";t.style.cssText="position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--surface);border:1px solid var(--amber);border-radius:10px;padding:10px 20px;font-size:13px;font-weight:600;color:var(--text);z-index:9999;opacity:0;transition:all .3s;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.3)";document.body.appendChild(t);}
+  t.textContent=msg;t.style.opacity="1";t.style.transform="translateX(-50%) translateY(0)";
+  clearTimeout(t._t);t._t=setTimeout(()=>{t.style.opacity="0";t.style.transform="translateX(-50%) translateY(20px)";},dur);
+}
+
+// ── CLIENT EMAIL ───────────────────────────────────────────────────────────────
+function emailEstimate(){
+  const c=calc();if(c.tot===0){alert("Please complete your estimate first.");return;}
+  const scope=SCOPES.find(s=>s.id===st.scope)?.label||"Renovation";
+  const subj=encodeURIComponent("Renovation Estimate "+st.estimateNum+" — "+(st.projectName||st.addr||"Project"));
+  const nl="\n";
+  const body=encodeURIComponent("Dear "+(st.clientName||"Client")+","+nl+nl+"Please find your renovation estimate below."+nl+nl+"ESTIMATE: "+st.estimateNum+nl+"Date: "+st.createdDate+nl+"Project: "+(st.projectName||scope)+nl+"Address: "+(st.addr||"—")+nl+"Location: "+c.loc.label+nl+nl+"COST BREAKDOWN"+nl+"Materials & Labor: "+fmt(c.base+c.lab+c.equ)+(c.apps>0?nl+"Appliances: "+fmt(c.apps):"")+(c.hvac>0?nl+"HVAC: "+fmt(c.hvac):"")+(c.permit>0?nl+"Permit Fees: "+fmt(c.permit):"")+(c.margin>0?nl+"Contractor Margin: "+fmt(c.margin):"")+(c.contingency>0?nl+"Contingency: "+fmt(c.contingency):"")+nl+nl+"TOTAL ESTIMATE: "+fmt(c.tot)+nl+"Low Range (-15%): "+fmt(Math.round(c.tot*.85))+nl+"High Range (+20%): "+fmt(Math.round(c.tot*1.2))+nl+nl+"Quality: "+st.qual+nl+nl+"Valid for 30 days."+nl+nl+(st.contractorName||"RenovateIQ Pro")+nl+(st.contractorPhone||"")+(st.contractorLicense?nl+"License: "+st.contractorLicense:""));
+  window.location.href="mailto:"+(st.clientEmail||"")+"?subject="+subj+"&body="+body;
+}
+
+// ── PDF/CSV PRICE SHEET PARSER ─────────────────────────────────────────────────
+function parsePriceSheet(file){
+  const ext=file.name.split('.').pop().toLowerCase();
+  const resultEl=document.getElementById("parse-result");
+  if(resultEl){resultEl.style.display="block";resultEl.style.background="var(--surface)";resultEl.style.color="var(--muted)";resultEl.textContent="📄 Reading price sheet...";}
+  const reader=new FileReader();
+  reader.onload=(e)=>{
+    let text=e.target.result;
+    if(typeof text!=="string"){
+      // Binary - extract readable strings
+      const bytes=new Uint8Array(text);
+      text=Array.from(bytes).map(b=>b>31&&b<127?String.fromCharCode(b):" ").join("");
+    }
+    extractPricesFromText(text,file.name,resultEl);
+  };
+  if(ext==="csv"||ext==="txt")reader.readAsText(file);
+  else reader.readAsArrayBuffer(file);
+}
+function extractPricesFromText(text,filename,resultEl){
+  const applied=[];
+  const lines=text.split(/\n|\r/);
+  const MAPS=[
+    {keys:["refrigerator","fridge"],label:"Refrigerator",type:"app"},
+    {keys:["range","oven","stove","cooktop"],label:"Range / Oven",type:"app"},
+    {keys:["dishwasher"],label:"Dishwasher",type:"app"},
+    {keys:["microwave"],label:"Microwave",type:"app"},
+    {keys:["washer","washing machine"],label:"Washer",type:"app"},
+    {keys:["dryer"],label:"Dryer",type:"app"},
+    {keys:["hvac","ac unit","air cond","furnace","heat pump"],label:"hvac_total",type:"hvac"},
+    {keys:["carpet","carpeting"],label:"floor_carpet",type:"room"},
+    {keys:["hardwood","wood floor"],label:"floor_hwood",type:"room"},
+    {keys:["lvp","luxury vinyl","vinyl plank"],label:"floor_lvp",type:"room"},
+    {keys:["tile","ceramic","porcelain floor"],label:"floor_tile",type:"room"},
+    {keys:["roof","roofing","shingle"],label:"roof",type:"other"},
+    {keys:["driveway","asphalt","paving","pavement"],label:"driveway",type:"other"},
+    {keys:["window","windows"],label:"windows_all",type:"other"},
+    {keys:["deck","patio"],label:"deck",type:"other"},
+    {keys:["painting","paint","interior paint"],label:"paint",type:"room"},
+    {keys:["cabinet","cabinetry"],label:"cabinets",type:"room"},
+    {keys:["countertop","counter top","granite","quartz"],label:"countertop_gq",type:"room"},
+  ];
+  lines.forEach(line=>{
+    const l=line.toLowerCase();
+    const m=line.match(/([a-zA-Z][\w\s\/\-]{2,35})\s*[:\|	,]\s*\$?([\d,]+\.?\d{0,2})/);
+    if(!m)return;
+    const item=m[1].trim().toLowerCase();
+    const price=parseFloat(m[2].replace(/,/g,""));
+    if(!price||price<=0||price>500000)return;
+    MAPS.forEach(map=>{
+      if(map.keys.some(k=>item.includes(k))){
+        const ok="sheet_"+map.label;
+        if(!st.priceOverrides[ok]){
+          st.priceOverrides[ok]=price;
+          applied.push(map.label.replace(/_/g," ")+" → "+fmt(price)+" (from sheet)");
+        }
+      }
+    });
+  });
+  // Sq footage
+  const sqm=text.match(/([\d,]+)\s*(?:sq\.?\s*f(?:oo|ee)?t?|sqft|square\s*f)/gi)||[];
+  if(sqm.length>0){const sf=parseInt(sqm[0].replace(/[^\d]/g,""));if(sf>0&&sf<100000)applied.push("Area: "+sf.toLocaleString()+" sqft noted");}
+  if(resultEl){
+    if(applied.length>0){
+      resultEl.style.background="rgba(34,197,94,.08)";resultEl.style.borderColor="rgba(34,197,94,.3)";resultEl.style.color="var(--text)";
+      resultEl.innerHTML='<div style="font-weight:700;color:var(--green);margin-bottom:8px">📄 Extracted from '+filename+':</div>'+applied.map(a=>'<div style="font-size:12px;padding:2px 0">▸ '+a+'</div>').join("")+'<div style="font-size:11px;color:var(--cyan);margin-top:8px;padding:8px;background:rgba(6,182,212,.08);border-radius:6px">💡 Prices applied as overrides in estimate.</div>';
+    } else {
+      resultEl.style.background="rgba(245,158,11,.08)";
+      resultEl.innerHTML='<strong style="color:var(--amber)">⚠️ No prices found.</strong><br><span style="font-size:11px;color:var(--faint)">CSV works best. Format: Item Name, $Price per line.</span>';
+    }
+  }
+  recalc();
+}
+
+// ── ENHANCED PARSER PATCH (driveway + sq ft variations) ───────────────────────
+const _origParseNotes=parseNotesWithAI;
+parseNotesWithAI=function(){
+  _origParseNotes();
+  setTimeout(()=>{
+    const notes=st.projectNotes;if(!notes)return;
+    const extra=[];
+    // Driveway/paving
+    if(/(driveway|pavement|paving|asphalt|mill.?and|blacktop|concrete.?drive)/i.test(notes)){
+      if(!st.otherItems.includes("driveway")){st.otherItems.push("driveway");extra.push("Added: Driveway / Walkway");}
+      const sqm=notes.match(/([\d,]+)\s*(?:sq\.?\s*f(?:oo|ee)?t?|sqft|square\s*f)/i);
+      if(sqm){
+        const sf=parseInt(sqm[1].replace(/,/g,""));
+        const rates={b:3,a:6,l:12};const loc=getLoc(st.addr);
+        const cost=Math.round(sf*rates[qk()]*loc.mx);
+        st.priceOverrides["other_driveway"]=cost;
+        extra.push("Driveway: "+sf.toLocaleString()+" sqft → "+fmt(cost)+" est.");
+      }
+    }
+    // Retaining wall / grading
+    if(/(retaining wall|grading|drainage|french drain)/i.test(notes)){
+      if(!st.otherItems.includes("lawn")){st.otherItems.push("lawn");extra.push("Added: Exterior Grading / Drainage");}
+    }
+    // Pool
+    if(/pool|spa|hot tub/i.test(notes)){
+      if(!st.customLine.enabled){st.customLine.enabled=true;st.customLine.label="Pool / Spa";st.customLine.amount="45000";extra.push("Pool/Spa added as custom item — please set your price");}
+    }
+    // Sq footage catch-all (more variations)
+    const sqVars=notes.match(/([\d,]+)\s*(?:sq\.?\s*f(?:oo|ee)?t?|sqft|square\s*f(?:oo|ee)?t?|s\.f\.)/gi)||[];
+    if(sqVars.length>0){
+      const sf=parseInt(sqVars[0].replace(/[^\d]/g,""));
+      if(sf>0&&sf<100000){
+        rooms.forEach(r=>{if(r.qty>0)for(let i=0;i<r.qty;i++)roomSizes[szKey(r.key,i)]=sf;});
+        if(extra.length===0)extra.push("Area: "+sf.toLocaleString()+" sqft applied to rooms");
+      }
+    }
+    if(extra.length>0){
+      const el=document.getElementById("parse-result");
+      if(el&&el.style.display!=="none"){
+        el.innerHTML+=extra.map(a=>'<div style="font-size:12px;padding:2px 0;display:flex;gap:6px"><span style="color:var(--amber)">▸</span>'+a+'</div>').join("");
+      }
+      recalc();
+    }
+  },850);
+};
+
+// ── THEME ──────────────────────────────────────────────────────────────────────
+function applyTheme(theme){
+  document.documentElement.setAttribute("data-theme",theme);
+  const icon=document.getElementById("theme-icon");
+  const lbl=document.getElementById("theme-lbl");
+  if(theme==="dark"){if(icon)icon.textContent="🌙";if(lbl)lbl.textContent="DARK";}
+  else{if(icon)icon.textContent="☀️";if(lbl)lbl.textContent="LIGHT";}
+  const meta=document.querySelector('meta[name="theme-color"]');
+  if(meta)meta.setAttribute("content",theme==="dark"?"#020617":"#ffffff");
+  try{localStorage.setItem("renovateiq_theme",theme);}catch(e){}
+}
+function toggleTheme(){
+  const cur=document.documentElement.getAttribute("data-theme")||"light";
+  applyTheme(cur==="dark"?"light":"dark");
+  const icon=document.getElementById("theme-icon");
+  if(icon){icon.style.transform="rotate(360deg) scale(1.3)";setTimeout(()=>{icon.style.transform="";},400);}
+}
+function initTheme(){
+  let saved;try{saved=localStorage.getItem("renovateiq_theme");}catch(e){}
+  if(saved){applyTheme(saved);return;}
+  applyTheme(window.matchMedia("(prefers-color-scheme:dark)").matches?"dark":"light");
+  window.matchMedia("(prefers-color-scheme:dark)").addEventListener("change",e=>{
+    try{if(!localStorage.getItem("renovateiq_theme"))applyTheme(e.matches?"dark":"light");}catch(err){}
+  });
+}
+
+// ── INIT ───────────────────────────────────────────────────────────────────────
+initTheme();
+renderStepper();
+renderAll();
+
+// ── PWA ────────────────────────────────────────────────────────────────────────
+let deferredPrompt=null;
+const isIOS=()=>/iphone|ipad|ipod/i.test(navigator.userAgent)&&!window.MSStream;
+const isStandalone=()=>window.matchMedia("(display-mode:standalone)").matches||window.navigator.standalone===true;
+const PWA_KEY="pwa_dismissed_v1";
+window.addEventListener("beforeinstallprompt",(e)=>{
+  e.preventDefault();deferredPrompt=e;
+  if(isStandalone())return;
+  try{if(localStorage.getItem(PWA_KEY))return;}catch(err){}
+  setTimeout(()=>{const b=document.getElementById("pwa-banner");if(b)b.classList.add("show");},2000);
+});
+document.getElementById("pwa-install-btn")?.addEventListener("click",async()=>{
+  if(!deferredPrompt)return;
+  deferredPrompt.prompt();
+  const{outcome}=await deferredPrompt.userChoice;
+  if(outcome==="accepted"){document.getElementById("pwa-banner")?.classList.remove("show");try{localStorage.setItem(PWA_KEY,"1");}catch(e){}}
+  deferredPrompt=null;
+});
+document.getElementById("pwa-dismiss-btn")?.addEventListener("click",()=>{
+  document.getElementById("pwa-banner")?.classList.remove("show");
+  try{localStorage.setItem(PWA_KEY,"1");}catch(e){}
+});
+document.getElementById("ios-tip-close")?.addEventListener("click",()=>{
+  document.getElementById("ios-tip")?.classList.remove("show");
+  try{localStorage.setItem(PWA_KEY,"1");}catch(e){}
+});
+window.addEventListener("appinstalled",()=>{
+  document.getElementById("pwa-banner")?.classList.remove("show");
+  document.getElementById("ios-tip")?.classList.remove("show");
+});
+window.addEventListener("load",()=>{
+  if(isStandalone())return;
+  try{if(localStorage.getItem(PWA_KEY))return;}catch(e){}
+  if(isIOS()){setTimeout(()=>{const t=document.getElementById("ios-tip");if(t)t.classList.add("show");},3000);}
+});
+if("serviceWorker" in navigator){
+  const SW=`const CACHE="renovateiq-v3";const ASSETS=["/"];
+self.addEventListener("install",e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));self.skipWaiting();});
+self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));self.clients.claim();});
+self.addEventListener("fetch",e=>{e.respondWith(caches.match(e.request).then(cached=>{if(cached)return cached;return fetch(e.request).then(res=>{if(!res||res.status!==200||res.type!=="basic")return res;const clone=res.clone();caches.open(CACHE).then(c=>c.put(e.request,clone));return res;}).catch(()=>caches.match("/"));}));});`;
+  const blob=new Blob([SW],{type:"application/javascript"});
+  navigator.serviceWorker.register(URL.createObjectURL(blob),{scope:"/"})
+    .catch(e=>console.log("SW:",e));
+}
+</script>
+</body>
+</html>
